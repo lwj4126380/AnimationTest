@@ -27,6 +27,7 @@ private:
     QRect leftRect;
     QRect rightRect;
     QRect sideEndRect;
+    int   previousCenterIndex;
 };
 
 #endif // BANNERWIDGET_H

@@ -11,7 +11,11 @@
 
 #define animation_duration 200
 
-BannerWidget::BannerWidget(QWidget *parent) : QWidget(parent)
+#define total_banners 4
+
+BannerWidget::BannerWidget(QWidget *parent) :
+    QWidget(parent),
+    previousCenterIndex(-1)
 {
     BannerLabel *lb1 = new BannerLabel("http://p4.music.126.net/mp2Y2n4ueZzIj6JSnUOdtw==/7875801790676538.jpg", this);
     BannerLabel *lb3 = new BannerLabel("http://p4.music.126.net/tGPljf-IMOCyPvumoWLOTg==/7987951976374270.jpg", this);
@@ -28,42 +32,58 @@ void BannerWidget::moveLeft()
 {
     QParallelAnimationGroup *animationGroup = new QParallelAnimationGroup();
 
-    QPropertyAnimation *animationCenter = new QPropertyAnimation(bannerLabels[1], "geometry");
-    connect(animationCenter, &QPropertyAnimation::finished, [&](){
-        bannerLabels[1]->showMask(true);
-    });
+    int leftBannerIndex=previousCenterIndex,centerBannerIndex=-1,rightBannerIndex=-1,unvisibleBannerIndex=-1;
+
+    switch (previousCenterIndex) {
+    case total_banners-1:
+        centerBannerIndex=0;
+        rightBannerIndex=1;
+        unvisibleBannerIndex=2;
+        break;
+    case total_banners-2:
+        centerBannerIndex=leftBannerIndex+1;
+        rightBannerIndex=0;
+        unvisibleBannerIndex=1;
+        break;
+    case total_banners-3:
+        centerBannerIndex=leftBannerIndex+1;
+        rightBannerIndex=leftBannerIndex+2;
+        unvisibleBannerIndex=0;
+        break;
+    default:
+        centerBannerIndex=leftBannerIndex+1;
+        rightBannerIndex=leftBannerIndex+2;
+        unvisibleBannerIndex=leftBannerIndex+3;
+        break;
+    }
+
+//    bannerLabels[leftBannerIndex]->showMask(false);
+//    bannerLabels[centerBannerIndex]->showMask(false);
+//    bannerLabels[rightBannerIndex]->showMask(false);
+//    bannerLabels[unvisibleBannerIndex]->showMask(false);
+
+    QPropertyAnimation *animationCenter = new QPropertyAnimation(bannerLabels[centerBannerIndex], "geometry");
     animationCenter->setDuration(animation_duration);
     animationCenter->setStartValue(centerRect);
     animationCenter->setKeyValueAt(0.1, QRect(centerRect.x()+10, centerRect.y()+5, centerRect.width()-20, centerRect.height()-10));
     animationCenter->setEndValue(leftRect);
     animationCenter->setEasingCurve(QEasingCurve::InOutQuad);
 
-    QPropertyAnimation *animationRight = new QPropertyAnimation(bannerLabels[2], "geometry");
-    connect(animationRight, &QPropertyAnimation::finished, [&](){
-        bannerLabels[2]->showMask(false);
-    });
+    QPropertyAnimation *animationRight = new QPropertyAnimation(bannerLabels[rightBannerIndex], "geometry");
     animationRight->setDuration(animation_duration);
     animationRight->setStartValue(rightRect);
     animationRight->setEndValue(centerRect);
     animationRight->setEasingCurve(QEasingCurve::InOutQuad);
 
-    QPropertyAnimation *animationLeft = new QPropertyAnimation(bannerLabels[0], "geometry");
-    connect(animationLeft, &QPropertyAnimation::finished, [&](){
-        bannerLabels[0]->showMask(true);
-    });
+    QPropertyAnimation *animationLeft = new QPropertyAnimation(bannerLabels[leftBannerIndex], "geometry");
     animationLeft->setDuration(animation_duration);
     animationLeft->setStartValue(leftRect);
     animationLeft->setEndValue(sideEndRect);
     animationLeft->setEasingCurve(QEasingCurve::InOutQuad);
 
-    bannerLabels[3]->show();
-    bannerLabels[3]->lower();
-    bannerLabels[3]->lower();
-    bannerLabels[3]->lower();
-    QPropertyAnimation *animationLast = new QPropertyAnimation(bannerLabels[3], "geometry");
-    connect(animationLast, &QPropertyAnimation::finished, [&](){
-        bannerLabels[3]->showMask(true);
-    });
+    bannerLabels[unvisibleBannerIndex]->show();
+    bannerLabels[unvisibleBannerIndex]->lower();
+    QPropertyAnimation *animationLast = new QPropertyAnimation(bannerLabels[unvisibleBannerIndex], "geometry");
     animationLast->setDuration(animation_duration);
     animationLast->setStartValue(sideEndRect);
     animationLast->setEndValue(rightRect);
@@ -74,12 +94,22 @@ void BannerWidget::moveLeft()
     animationGroup->addAnimation(animationLeft);
     animationGroup->addAnimation(animationLast);
 
-    animationGroup->start(QAbstractAnimation::DeleteWhenStopped);
-    QTimer::singleShot(animation_duration/2, [&](){
-        bannerLabels[2]->raise();
+    connect(animationGroup, &QParallelAnimationGroup::finished, [=](){
+        bannerLabels[unvisibleBannerIndex]->showMask(true);
+        bannerLabels[leftBannerIndex]->showMask(true);
+        bannerLabels[centerBannerIndex]->showMask(true);
+        bannerLabels[rightBannerIndex]->showMask(false);
+        bannerLabels[leftBannerIndex]->hide();
+        if (previousCenterIndex == total_banners-1)
+            previousCenterIndex = 0;
+        else
+            previousCenterIndex++;
     });
 
-
+    animationGroup->start(QAbstractAnimation::DeleteWhenStopped);
+    QTimer::singleShot(animation_duration/2, [=](){
+        bannerLabels[rightBannerIndex]->raise();
+    });
 }
 
 void BannerWidget::resizeEvent(QResizeEvent *event)
@@ -90,9 +120,13 @@ void BannerWidget::resizeEvent(QResizeEvent *event)
     rightRect = QRect(width()-side_width, 10, side_width, side_height);
     sideEndRect = QRect((width()-center_width)/2, 10, center_width, center_height-10);
 
-    bannerLabels[0]->setGeometry(leftRect);
-    bannerLabels[1]->setGeometry(centerRect);
-    bannerLabels[2]->setGeometry(rightRect);
+    if (previousCenterIndex == -1) {
+        previousCenterIndex = 0;
+
+        bannerLabels[previousCenterIndex]->setGeometry(leftRect);
+        bannerLabels[previousCenterIndex+1]->setGeometry(centerRect);
+        bannerLabels[previousCenterIndex+2]->setGeometry(rightRect);
+    }
 }
 
 void BannerWidget::mousePressEvent(QMouseEvent *event)

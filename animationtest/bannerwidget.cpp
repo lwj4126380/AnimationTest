@@ -66,7 +66,7 @@ void BannerWidget::moveLeft()
     QPropertyAnimation *animationCenter = new QPropertyAnimation(bannerLabels[centerBannerIndex], "geometry");
     animationCenter->setDuration(animation_duration);
     animationCenter->setStartValue(centerRect);
-    animationCenter->setKeyValueAt(0.1, QRect(centerRect.x()+10, centerRect.y()+5, centerRect.width()-20, centerRect.height()-10));
+//    animationCenter->setKeyValueAt(0.1, QRect(centerRect.x()+10, centerRect.y()+5, centerRect.width()-20, centerRect.height()-10));
     animationCenter->setEndValue(leftRect);
     animationCenter->setEasingCurve(QEasingCurve::InOutQuad);
 

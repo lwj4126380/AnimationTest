@@ -9,7 +9,7 @@
 #define side_width 513
 #define side_height 190
 
-#define animation_duration 200
+#define animation_duration 250
 
 #define total_banners 4
 

@@ -27,19 +27,12 @@ BannerLabel::BannerLabel(QString url, QWidget *parent)
     : AutoLoadPictureLabel(url, parent)
 {
     maskWidget = new QWidget(this);
-    maskWidget->setObjectName("maskWidget");
-    maskWidget->setStyleSheet("#maskWidget{background-color: #55555555;}");
-    maskWidget->hide();
+    setColor(QColor(0, 0, 0, 160));
 }
 
 BannerLabel::~BannerLabel()
 {
 
-}
-
-void BannerLabel::showMask(bool b)
-{
-    maskWidget->setVisible(b);
 }
 
 void BannerLabel::resizeEvent(QResizeEvent *event)

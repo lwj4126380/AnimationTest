@@ -57,10 +57,11 @@ void BannerWidget::moveLeft()
         break;
     }
 
-//    bannerLabels[leftBannerIndex]->showMask(false);
-//    bannerLabels[centerBannerIndex]->showMask(false);
-//    bannerLabels[rightBannerIndex]->showMask(false);
-//    bannerLabels[unvisibleBannerIndex]->showMask(false);
+    QPropertyAnimation *colorAnimationCenter = new QPropertyAnimation(bannerLabels[centerBannerIndex], "color");
+    colorAnimationCenter->setDuration(animation_duration);
+    colorAnimationCenter->setStartValue(QColor(0, 0, 0, 0));
+    colorAnimationCenter->setEndValue(QColor(0, 0, 0, 150));
+    colorAnimationCenter->setEasingCurve(QEasingCurve::InOutQuad);
 
     QPropertyAnimation *animationCenter = new QPropertyAnimation(bannerLabels[centerBannerIndex], "geometry");
     animationCenter->setDuration(animation_duration);
@@ -68,6 +69,12 @@ void BannerWidget::moveLeft()
     animationCenter->setKeyValueAt(0.1, QRect(centerRect.x()+10, centerRect.y()+5, centerRect.width()-20, centerRect.height()-10));
     animationCenter->setEndValue(leftRect);
     animationCenter->setEasingCurve(QEasingCurve::InOutQuad);
+
+    QPropertyAnimation *colorAnimationRight = new QPropertyAnimation(bannerLabels[rightBannerIndex], "color");
+    colorAnimationRight->setDuration(animation_duration);
+    colorAnimationRight->setStartValue(QColor(0, 0, 0, 150));
+    colorAnimationRight->setEndValue(QColor(0, 0, 0, 0));
+    colorAnimationRight->setEasingCurve(QEasingCurve::InOutQuad);
 
     QPropertyAnimation *animationRight = new QPropertyAnimation(bannerLabels[rightBannerIndex], "geometry");
     animationRight->setDuration(animation_duration);
@@ -93,13 +100,11 @@ void BannerWidget::moveLeft()
     animationGroup->addAnimation(animationRight);
     animationGroup->addAnimation(animationLeft);
     animationGroup->addAnimation(animationLast);
+    animationGroup->addAnimation(colorAnimationRight);
+    animationGroup->addAnimation(colorAnimationCenter);
 
     connect(animationGroup, &QParallelAnimationGroup::finished, [=](){
-        bannerLabels[unvisibleBannerIndex]->showMask(true);
-        bannerLabels[leftBannerIndex]->showMask(true);
-        bannerLabels[centerBannerIndex]->showMask(true);
-        bannerLabels[rightBannerIndex]->showMask(false);
-        bannerLabels[leftBannerIndex]->hide();
+        bannerLabels[rightBannerIndex]->setColor(QColor(0, 0, 0, 0));
         if (previousCenterIndex == total_banners-1)
             previousCenterIndex = 0;
         else
@@ -125,6 +130,7 @@ void BannerWidget::resizeEvent(QResizeEvent *event)
 
         bannerLabels[previousCenterIndex]->setGeometry(leftRect);
         bannerLabels[previousCenterIndex+1]->setGeometry(centerRect);
+        bannerLabels[previousCenterIndex+1]->setColor(QColor(0, 0, 0, 0));
         bannerLabels[previousCenterIndex+2]->setGeometry(rightRect);
     }
 }

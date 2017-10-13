@@ -24,7 +24,6 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
 
     _titleLabel = new QLabel(this);
     _titleLabel->setObjectName("titleLabel");
-    _titleLabel->setText(tr("NeteaseCloudMusic"));
     _titleLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Expanding );
     _titleLayout->addWidget(_titleLabel);
 

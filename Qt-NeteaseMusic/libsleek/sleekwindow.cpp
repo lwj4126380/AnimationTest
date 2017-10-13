@@ -262,7 +262,7 @@ void SleekWindow::close(bool quit)
     _eventLoop.exit();
     EnableWindow(_parenthWnd, TRUE);
     hide();
-    if (quit)
+    if (_isMainWindow)
         _app->exit();
 }
 

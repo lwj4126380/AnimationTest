@@ -25,3 +25,23 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->widget->changeBannerIndex(0);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->widget->changeBannerIndex(1);
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    ui->widget->changeBannerIndex(2);
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    ui->widget->changeBannerIndex(3);
+}

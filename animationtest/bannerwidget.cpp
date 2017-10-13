@@ -289,25 +289,25 @@ void BannerWidget::startAnotherAnimation(int index, QList<int> previous)
     colorAnimationCenter->setDuration(animation_duration*0.5);
     colorAnimationCenter->setStartValue(QColor(0, 0, 0, 150));
     colorAnimationCenter->setEndValue(QColor(0, 0, 0, 0));
-    colorAnimationCenter->setEasingCurve(QEasingCurve::InCubic);
+    colorAnimationCenter->setEasingCurve(QEasingCurve::InOutQuad);
 
     QPropertyAnimation *animationCenter = new QPropertyAnimation(bannerLabels[centerBannerIndex], "geometry");
     animationCenter->setDuration(animation_duration*0.5);
     animationCenter->setStartValue(centerStartRect);
     animationCenter->setEndValue(centerRect);
-    animationCenter->setEasingCurve(QEasingCurve::InCubic);
+    animationCenter->setEasingCurve(QEasingCurve::InOutQuad);
 
     QPropertyAnimation *animationRight = new QPropertyAnimation(bannerLabels[rightBannerIndex], "geometry");
     animationRight->setDuration(animation_duration*0.5);
     animationRight->setStartValue(rightStartRect);
     animationRight->setEndValue(rightRect);
-    animationRight->setEasingCurve(QEasingCurve::InCubic);
+    animationRight->setEasingCurve(QEasingCurve::InOutQuad);
 
     QPropertyAnimation *animationLeft = new QPropertyAnimation(bannerLabels[leftBannerIndex], "geometry");
     animationLeft->setDuration(animation_duration*0.5);
     animationLeft->setStartValue(leftStartRect);
     animationLeft->setEndValue(leftRect);
-    animationLeft->setEasingCurve(QEasingCurve::InCubic);
+    animationLeft->setEasingCurve(QEasingCurve::InOutQuad);
 
     animationGroup->addAnimation(animationCenter);
     animationGroup->addAnimation(animationRight);

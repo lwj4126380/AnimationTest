@@ -1,0 +1,18 @@
+#systemPanel {
+  margin: 0;
+  padding: 0;
+}
+
+#titleLabel {
+    background-color: green;
+}
+
+#titleWidget {
+  background: #c62f2f;
+  max-height: 50px;
+  min-height: 50px;
+}
+
+#centralWidget {
+  background: #fafafa; /* Window background color */
+}

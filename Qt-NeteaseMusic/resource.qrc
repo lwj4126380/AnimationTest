@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>stylesheets/red.css</file>
+    </qresource>
+</RCC>

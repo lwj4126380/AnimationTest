@@ -1,5 +1,17 @@
 <RCC>
     <qresource prefix="/">
         <file>stylesheets/red.css</file>
+        <file>uiresource/svg/topbar/back.svg</file>
+        <file>uiresource/svg/topbar/close.svg</file>
+        <file>uiresource/svg/topbar/head_arr.svg</file>
+        <file>uiresource/svg/topbar/logo.svg</file>
+        <file>uiresource/svg/topbar/mini.svg</file>
+        <file>uiresource/svg/topbar/msg.svg</file>
+        <file>uiresource/svg/topbar/next.svg</file>
+        <file>uiresource/svg/topbar/search.svg</file>
+        <file>uiresource/svg/topbar/set.svg</file>
+        <file>uiresource/svg/topbar/skin.svg</file>
+        <file>uiresource/svg/topbar/zoomin.svg</file>
+        <file>uiresource/svg/topbar/zoomout.svg</file>
     </qresource>
 </RCC>

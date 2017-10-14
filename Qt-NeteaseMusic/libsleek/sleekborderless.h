@@ -36,7 +36,7 @@ protected:
     QHBoxLayout* _titleLayout;
     QWidget* _centralWidget;
     QWidget* _titleWidget;
-    SvgLabel* _titleLabel;
+    SvgButton* _titleButton;
     QWidget* _mainPanel;
     //QVBoxLayout* _verticalLayout;
     //QHBoxLayout* _titleLayout;

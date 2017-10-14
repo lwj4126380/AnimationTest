@@ -1,8 +1,8 @@
 #include "svgbutton.h"
+#include <QApplication>
+#include <QDebug>
 
-
-
-void SvgLabel::SetAttrRecur(QDomElement &elem, QString strtagname, QString strattr, QString strattrval)
+void SvgButton::SetAttrRecur(QDomElement &elem, QString strtagname, QString strattr, QString strattrval)
 {
     // if it has the tagname then overwritte desired attribute
     if (elem.tagName().compare(strtagname) == 0)
@@ -20,7 +20,21 @@ void SvgLabel::SetAttrRecur(QDomElement &elem, QString strtagname, QString strat
     }
 }
 
-QPixmap SvgLabel::loadFromSvgFile(QString filePath, int width, int height, QString color)
+void SvgButton::enterEvent(QEvent *event)
+{
+    setIcon(QIcon(hoverStatePixmap));
+    setCursor(Qt::PointingHandCursor);
+    QPushButton::enterEvent(event);
+}
+
+void SvgButton::leaveEvent(QEvent *event)
+{
+    setIcon(QIcon(normalStatePixmap));
+    setCursor(Qt::ArrowCursor);
+    QPushButton::leaveEvent(event);
+}
+
+QPixmap SvgButton::loadFromSvgFile(QString filePath, int width, int height, QString color)
 {
     QPixmap result;
     // open svg resource load contents to qbytearray
@@ -49,39 +63,43 @@ QPixmap SvgLabel::loadFromSvgFile(QString filePath, int width, int height, QStri
     return result;
 }
 
-void SvgLabel::enterEvent(QEvent *event)
-{
-    setPixmap(hoverStatePixmap);
-    setCursor(Qt::PointingHandCursor);
-
-    QLabel::enterEvent(event);
-}
-
-void SvgLabel::leaveEvent(QEvent *event)
-{
-    setPixmap(normalStatePixmap);
-    setCursor(Qt::ArrowCursor);
-    QLabel::enterEvent(event);
-}
-
-void SvgLabel::mousePressEvent(QMouseEvent *e)
-{
-
-}
-
-SvgLabel::SvgLabel(QString iconPath, int iconWidth, int iconHeight, QWidget *parent,
-                   QString normalColor,
-                   QString hoverColor)
-    : QLabel(parent)
+SvgButton::SvgButton(QString iconPath, int iconWidth, int iconHeight,
+                     QString normalColor,
+                     QString hoverColor,
+                     QWidget *parent)
+    : QPushButton(parent)
 {
     normalStatePixmap = loadFromSvgFile(iconPath, iconWidth, iconHeight, normalColor);
     hoverStatePixmap = loadFromSvgFile(iconPath, iconWidth, iconHeight, hoverColor);
-    setScaledContents(false);
-    setPixmap(normalStatePixmap);
-    setAlignment(Qt::AlignCenter);
+    setIcon(QIcon(normalStatePixmap));
+    setIconSize(QSize(iconWidth, iconHeight));
+    bTextMode = false;
 }
 
-SvgLabel::~SvgLabel()
+//painter.setCompositionMode(QPainter::CompositionMode_Source);
+//painter.fillRect(resultImage.rect(), Qt::transparent);
+//painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+//painter.drawPixmap(0, 0, head_mask);
+//painter.setCompositionMode(QPainter::CompositionMode_SourceOut);
+//painter.drawPixmap(0, 0, src.scaled(size));
+//painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+//painter.end();
+
+SvgButton::SvgButton(QString text, QColor normalColor, QColor hoverColor, QString iconPath, int width, int height, QWidget *parent) :
+    QPushButton(parent)
+{
+    setText(text);
+    QFontMetrics fm(qApp->font());
+    QRect boundRect = fm.boundingRect(text);
+    QPixmap pixmap(boundRect.width() + width, boundRect.height()+6 > height ? boundRect.height()+6 : height);
+    QPainter p(&pixmap);
+    p.setPen(normalColor);
+    p.drawText(0, 30, text);
+    p.end();
+    pixmap.save("F:\\kkk.png");
+}
+
+SvgButton::~SvgButton()
 {
 
 }

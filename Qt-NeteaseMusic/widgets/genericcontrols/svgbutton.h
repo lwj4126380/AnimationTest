@@ -1,20 +1,24 @@
 #ifndef SVGBUTTON_H
 #define SVGBUTTON_H
 
-#include <QLabel>
+#include <QPushButton>
 #include <QSvgRenderer>
 #include <QDomElement>
 #include <QFile>
 #include <QPainter>
 
-class SvgLabel : public QLabel
+class SvgButton : public QPushButton
 {
     Q_OBJECT
+
 public:
-    explicit SvgLabel(QString iconPath, int iconWidth, int iconHeight, QWidget *parent=Q_NULLPTR,
-                      QString normalColor="#e29595",
-                      QString hoverColor="white");
-    ~SvgLabel();
+    explicit SvgButton(QString iconPath, int iconWidth, int iconHeight,
+                      QString normalColor,
+                      QString hoverColor,
+                      QWidget *parent=Q_NULLPTR);
+
+    explicit SvgButton(QString text, QColor normalColor, QColor hoverColor, QString iconPath, int width, int height, QWidget *parent=Q_NULLPTR);
+    ~SvgButton();
 
 private:
     QPixmap loadFromSvgFile(QString filePath, int width=0, int height=0, QString color="black");
@@ -23,11 +27,11 @@ private:
 protected:
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
-    void mousePressEvent(QMouseEvent *e);
 
 private:
     QPixmap normalStatePixmap;
     QPixmap hoverStatePixmap;
+    bool bTextMode;
 };
 
 #endif // SVGBUTTON_H

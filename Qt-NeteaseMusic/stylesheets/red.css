@@ -34,6 +34,13 @@ SvgButton[functionButton="true"] {
     min-height: 22x;
 }
 
+QLabel[hoverLabelTag1="true"] {
+    color: #eec1c1;
+}
+
+QLabel[hoverLabelTag1="true"]:hover {
+    color: white;
+}
 
 #titleWidget {
   background: #c62f2f;

@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <QWindow>
 #include <QDebug>
+#include "hoverablewidget.h"
 
 SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWnd),
     _isResizeable(true)
@@ -36,7 +37,9 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     topRightLayout->setSpacing(14);
     topRightLayout->setMargin(0);
 
-SvgButton dd(QString::fromLocal8Bit("未登录>"), Qt::white, Qt::black, ":/uiresource/svg/topbar/head_arr.svg", 8, 4);
+    HoverableWidget *hb = new HoverableWidget();
+    hb->setTypeOne(QString::fromLocal8Bit("未登录"),":/uiresource/svg/topbar/head_arr.svg", 8, 4, 8, 8);
+    topRightLayout->addWidget(hb);
 
     //Skin button
     SvgButton *pushButtonSkin = new SvgButton(":/uiresource/svg/topbar/skin.svg", 16, 16,"#eec1c1", "white", this);

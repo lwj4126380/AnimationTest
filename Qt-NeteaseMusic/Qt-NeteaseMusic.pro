@@ -21,12 +21,16 @@ INCLUDEPATH += $$PWD/widgets/genericcontrols
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    widgets/genericcontrols/svgbutton.cpp
+    widgets/genericcontrols/svgbutton.cpp \
+    widgets/genericcontrols/hoverablewidget.cpp
 
 HEADERS  += mainwindow.h \
-    widgets/genericcontrols/svgbutton.h
+    widgets/genericcontrols/svgbutton.h \
+    widgets/genericcontrols/hoverablewidget.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     resource.qrc
+
+TRANSLATIONS += zh_en.ts

@@ -17,7 +17,6 @@ public:
                       QString hoverColor,
                       QWidget *parent=Q_NULLPTR);
 
-    explicit SvgButton(QString text, QColor normalColor, QColor hoverColor, QString iconPath, int width, int height, QWidget *parent=Q_NULLPTR);
     ~SvgButton();
 
 private:

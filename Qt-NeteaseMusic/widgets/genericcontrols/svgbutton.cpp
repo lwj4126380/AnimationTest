@@ -76,29 +76,6 @@ SvgButton::SvgButton(QString iconPath, int iconWidth, int iconHeight,
     bTextMode = false;
 }
 
-//painter.setCompositionMode(QPainter::CompositionMode_Source);
-//painter.fillRect(resultImage.rect(), Qt::transparent);
-//painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-//painter.drawPixmap(0, 0, head_mask);
-//painter.setCompositionMode(QPainter::CompositionMode_SourceOut);
-//painter.drawPixmap(0, 0, src.scaled(size));
-//painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-//painter.end();
-
-SvgButton::SvgButton(QString text, QColor normalColor, QColor hoverColor, QString iconPath, int width, int height, QWidget *parent) :
-    QPushButton(parent)
-{
-    setText(text);
-    QFontMetrics fm(qApp->font());
-    QRect boundRect = fm.boundingRect(text);
-    QPixmap pixmap(boundRect.width() + width, boundRect.height()+6 > height ? boundRect.height()+6 : height);
-    QPainter p(&pixmap);
-    p.setPen(normalColor);
-    p.drawText(0, 30, text);
-    p.end();
-    pixmap.save("F:\\kkk.png");
-}
-
 SvgButton::~SvgButton()
 {
 

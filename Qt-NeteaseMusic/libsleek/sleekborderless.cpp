@@ -20,9 +20,9 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     //titleWidget.setStyleSheet("background-color:pink;");
     _titleLayout->setObjectName("titleLayout");
     _titleLayout->setSpacing( 0 );
-    _titleLayout->setContentsMargins(15, 0, 15, 0);
+    _titleLayout->setContentsMargins(0, 0, 15, 0);
 
-    _titleLabel = new QLabel(this);
+    _titleLabel = new SvgLabel("F:\\logo.svg", 115, 20, this, "white");
     _titleLabel->setObjectName("titleLabel");
     _titleLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Expanding );
     _titleLayout->addWidget(_titleLabel);

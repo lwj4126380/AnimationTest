@@ -4,13 +4,12 @@
 }
 
 #titleLabel {
-    background-image: url(J:/logo.svg);
-    background-repeat: none;
-    background-attachment:fixed;
-    background-position: left center;
     max-width: 150px;
     min-width: 150px;
-    color: black;
+}
+
+#titleButton:pressed {
+    background-color: black;
 }
 
 #titleWidget {

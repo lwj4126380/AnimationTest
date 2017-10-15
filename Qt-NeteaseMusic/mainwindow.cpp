@@ -18,7 +18,9 @@ MainWindow::MainWindow(QApplication *app, bool isMainWindow) :
     sp->setChildrenCollapsible(false);
     SideBar *sb = new SideBar;
     sp->addWidget(sb);
-    sp->addWidget(new QWidget);
+    QWidget *widget = new QWidget();
+    widget->setStyleSheet("background-color: white");
+    sp->addWidget(widget);
     la->addWidget(sp);
 }
 

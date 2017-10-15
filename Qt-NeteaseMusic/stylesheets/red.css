@@ -15,6 +15,7 @@ QPushButton {
     background-color: #a82828;
 }
 
+/*网易云音乐logobutton*/
 #titleButton {
     max-width: 150px;
     min-width: 150px;
@@ -40,6 +41,16 @@ QLabel[hoverLabelTag1="true"] {
 
 QLabel[hoverLabelTag1="true"]:hover {
     color: white;
+}
+
+
+/*左边列表的qss*/
+SideBar {
+    min-width: 200px;
+}
+
+#sideBarWidget {
+    background-color: #f5f5f7;
 }
 
 QLabel[hoverLabelTag2="true"] {
@@ -76,6 +87,7 @@ QLabel[hoverLabelTag2="true"]:hover {
 #leftListWidget::item:hover:!selected {
     background-color: #f5f5f7;
 }
+/*-----------------------------*/
 
 #searchLineEdit {
     max-width: 185px;

@@ -2,11 +2,14 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QListWidget>
+#include <QScrollBar>
+#include <QDebug>
+#include <QTimer>
 #include "hoverablewidget.h"
 
 HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
 {
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(0);
     layout->setMargin(0);
@@ -21,6 +24,7 @@ HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, 
 
     contentWidget = new QListWidget();
     contentWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");
     contentWidget->setFrameStyle(QFrame::NoFrame);
     contentWidget->setFocusPolicy(Qt::NoFocus);
@@ -39,5 +43,6 @@ void HeadClickableListWidget::addWidgetItem(QString svgPath, int width, int heig
     });
     contentWidget->addItem(item);
     contentWidget->setItemWidget(item, widget);
+    contentWidget->setFixedHeight(32*contentWidget->count());
 }
 

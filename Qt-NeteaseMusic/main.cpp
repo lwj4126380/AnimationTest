@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-#include "headclickablelistwidget.h"
+//#include "widgets/uicomponent/sidebar.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,10 +19,8 @@ int main(int argc, char *argv[])
     MainWindow w(&a, true);
     w.show();
 
-//    HeadClickableListWidget hl(false, "ffff", QVariant());
-//    hl.addWidgetItem(":/uiresource/svg/sidebar/discover.svg", 18, 18, 18, 18, "HHHHHHHHHHH");
-//    hl.addWidgetItem(":/uiresource/svg/sidebar/discover.svg", 18, 18, 18, 18, "HHHHHHHHHHH");
-//    hl.show();
+//    SideBar sb;
+//    sb.showMaximized();
 
     return a.exec();
 }

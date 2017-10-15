@@ -13,7 +13,7 @@ public:
     void addWidgetItem(QString svgPath, int width, int height, int iconWidth, int iconHeight, QString text);
 
 signals:
-
+    void contentItemHeightChanged(int height);
 public slots:
 
 private:

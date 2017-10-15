@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+#include "headclickablelistwidget.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -14,8 +16,11 @@ int main(int argc, char *argv[])
         a.setStyleSheet( styleSheet );
     }
 
-    MainWindow w(&a, true);
-    w.show();
+//    MainWindow w(&a, true);
+//    w.show();
+
+    HeadClickableListWidget hl(false, "ffff", QVariant());
+    hl.show();
 
     return a.exec();
 }

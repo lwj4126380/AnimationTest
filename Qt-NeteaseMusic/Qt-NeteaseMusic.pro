@@ -22,11 +22,15 @@ INCLUDEPATH += $$PWD/widgets/genericcontrols
 SOURCES += main.cpp\
         mainwindow.cpp \
     widgets/genericcontrols/svgbutton.cpp \
-    widgets/genericcontrols/hoverablewidget.cpp
+    widgets/genericcontrols/hoverablewidget.cpp \
+    widgets/genericcontrols/searchlineedit.cpp \
+    widgets/genericcontrols/headclickablelistwidget.cpp
 
 HEADERS  += mainwindow.h \
     widgets/genericcontrols/svgbutton.h \
-    widgets/genericcontrols/hoverablewidget.h
+    widgets/genericcontrols/hoverablewidget.h \
+    widgets/genericcontrols/searchlineedit.h \
+    widgets/genericcontrols/headclickablelistwidget.h
 
 FORMS    += mainwindow.ui
 

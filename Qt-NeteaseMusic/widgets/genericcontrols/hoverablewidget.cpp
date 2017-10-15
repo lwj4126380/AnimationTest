@@ -81,5 +81,5 @@ bool HoverableWidget::eventFilter(QObject *watched, QEvent *event)
 #include <QDebug>
 void HoverableWidget::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "AAAAAAAA";
+    setFocus();
 }

@@ -8,6 +8,7 @@
 #include <QWindow>
 #include <QDebug>
 #include "hoverablewidget.h"
+#include "searchlineedit.h"
 
 SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWnd),
     _isResizeable(true)
@@ -28,6 +29,15 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     _titleButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Expanding );
     _titleLayout->addWidget(_titleButton);
 
+    //spaceitem
+    QSpacerItem *spaceItem = new QSpacerItem(80, 20, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    _titleLayout->addItem(spaceItem);
+
+    //prev next search
+    SearchLineEdit *se = new SearchLineEdit();
+    _titleLayout->addWidget(se);
+
+
     _titleLayout->addStretch();
 
     //function button
@@ -46,21 +56,18 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     pushButtonSkin->setProperty("functionButton", true);
     pushButtonSkin->setObjectName( "pushButtonSkin" );
     topRightLayout->addWidget( pushButtonSkin );
-    pushButtonSkin->setFocusPolicy(Qt::NoFocus);
 
     //Msg button
     SvgButton *pushButtonMsg = new SvgButton(":/uiresource/svg/topbar/msg.svg", 16, 16,"#eec1c1", "white", this);
     pushButtonMsg->setProperty("functionButton", true);
     pushButtonMsg->setObjectName( "pushButtonMsg" );
     topRightLayout->addWidget( pushButtonMsg );
-    pushButtonMsg->setFocusPolicy(Qt::NoFocus);
 
     //Set button
     SvgButton *pushButtonSet = new SvgButton(":/uiresource/svg/topbar/set.svg", 18, 16,"#eec1c1", "white", this);
     pushButtonSet->setProperty("functionButton", true);
     pushButtonSet->setObjectName( "pushButtonSet" );
     topRightLayout->addWidget( pushButtonSet );
-    pushButtonSet->setFocusPolicy(Qt::NoFocus);
 
     QLabel *label = new QLabel();
     label->setObjectName("vertical1pixLabel");
@@ -79,7 +86,6 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     pushButtonMiniMode->setProperty("systemButton", true);
     pushButtonMiniMode->setObjectName( "pushButtonMiniMode" );
     systemButtonLayout->addWidget( pushButtonMiniMode );
-    pushButtonMiniMode->setFocusPolicy(Qt::NoFocus);
 
     // Minimize
     SvgButton *pushButtonMinimize = new SvgButton(":/uiresource/svg/topbar/zoomout.svg", 13, 11,"#e29595", "white", this);
@@ -87,7 +93,6 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     pushButtonMinimize->setObjectName( "pushButtonMinimize" );
     systemButtonLayout->addWidget( pushButtonMinimize );
     QObject::connect( pushButtonMinimize, SIGNAL( clicked() ), this, SLOT( pushButtonMinimizeClicked() ) );
-    pushButtonMinimize->setFocusPolicy(Qt::NoFocus);
 
     // Maximize
     SvgButton *pushButtonMaximize = new SvgButton(":/uiresource/svg/topbar/zoomin.svg", 13, 11,"#e29595", "white", this);
@@ -95,7 +100,6 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     pushButtonMaximize->setObjectName( "pushButtonMaximize" );
     systemButtonLayout->addWidget( pushButtonMaximize );
     QObject::connect( pushButtonMaximize, SIGNAL( clicked() ), this, SLOT( pushButtonMaximizeClicked() ) );
-    pushButtonMaximize->setFocusPolicy(Qt::NoFocus);
 
     //Close
     SvgButton *pushButtonClose = new SvgButton(":/uiresource/svg/topbar/close.svg", 13, 11,"#e29595", "white", this);
@@ -103,7 +107,6 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     pushButtonClose->setObjectName( "pushButtonClose" );
     systemButtonLayout->addWidget( pushButtonClose );
     QObject::connect( pushButtonClose, SIGNAL( clicked() ), this, SLOT( pushButtonCloseClicked() ) );
-    pushButtonClose->setFocusPolicy(Qt::NoFocus);
 
     // Main panel layout
     QGridLayout *mainGridLayout = new QGridLayout();
@@ -144,9 +147,6 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     mainGridLayout->addWidget( scrollArea );
 
     _verticalLayout->addWidget(_mainPanel);
-    scrollArea->setFocusPolicy(Qt::NoFocus);
-    _mainPanel->setFocusPolicy(Qt::NoFocus);
-    setFocusPolicy(Qt::NoFocus);
     show();
 
     //centralWidget.setFocusPolicy(Qt::NoFocus);

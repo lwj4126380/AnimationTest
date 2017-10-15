@@ -42,6 +42,31 @@ QLabel[hoverLabelTag1="true"]:hover {
     color: white;
 }
 
+#headLabel {
+    max-height: 32px;
+    min-height: 32px;
+    color: #7d7d7d;
+    padding-left: 10px;
+}
+
+#searchLineEdit {
+    max-width: 185px;
+    min-width: 185px;
+    max-height: 22px;
+    min-height: 22x;
+    background-color: #a82828;
+
+    border-style: solid;
+    border-radius: 11px;
+    color: #c77373;
+    padding-left: 10px;
+    padding-right: 25px;
+}
+
+#searchLineEdit:focus {
+    color: white;
+}
+
 #titleWidget {
   background: #c62f2f;
   max-height: 50px;

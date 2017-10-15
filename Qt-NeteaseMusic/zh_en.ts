@@ -10,10 +10,10 @@
     </message>
 </context>
 <context>
-    <name>SleekBorderless</name>
+    <name>SearchLineEdit</name>
     <message>
-        <location filename="libsleek/sleekborderless.cpp" line="41"/>
-        <source>NotLogin</source>
+        <location filename="widgets/genericcontrols/searchlineedit.cpp" line="8"/>
+        <source>search music, user</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

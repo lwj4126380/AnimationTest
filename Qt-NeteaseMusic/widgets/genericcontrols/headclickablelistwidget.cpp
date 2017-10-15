@@ -2,6 +2,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QListWidget>
+#include "hoverablewidget.h"
 
 HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
 {
@@ -18,8 +19,25 @@ HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, 
         layout->addWidget(lb);
     }
 
-    QListWidget *listWidget = new QListWidget();
-    layout->addWidget(listWidget);
+    contentWidget = new QListWidget();
+    contentWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    contentWidget->setObjectName("leftListWidget");
+    contentWidget->setFrameStyle(QFrame::NoFrame);
+    contentWidget->setFocusPolicy(Qt::NoFocus);
+    layout->addWidget(contentWidget);
 
     setLayout(layout);
 }
+
+void HeadClickableListWidget::addWidgetItem(QString svgPath, int width, int height, int iconWidth, int iconHeight, QString text)
+{
+    HoverableWidget *widget = new HoverableWidget();
+    widget->setTyleTwo(text, svgPath, width, height, iconWidth, iconHeight);
+    QListWidgetItem *item = new QListWidgetItem();
+    connect(widget, &HoverableWidget::clicked, [=](){
+        item->setSelected(true);
+    });
+    contentWidget->addItem(item);
+    contentWidget->setItemWidget(item, widget);
+}
+

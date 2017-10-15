@@ -13,5 +13,20 @@
         <file>uiresource/svg/topbar/skin.svg</file>
         <file>uiresource/svg/topbar/zoomin.svg</file>
         <file>uiresource/svg/topbar/zoomout.svg</file>
+        <file>uiresource/svg/sidebar/artist.svg</file>
+        <file>uiresource/svg/sidebar/cloud.svg</file>
+        <file>uiresource/svg/sidebar/discover.svg</file>
+        <file>uiresource/svg/sidebar/dld.svg</file>
+        <file>uiresource/svg/sidebar/down.svg</file>
+        <file>uiresource/svg/sidebar/fm.svg</file>
+        <file>uiresource/svg/sidebar/friend.svg</file>
+        <file>uiresource/svg/sidebar/local.svg</file>
+        <file>uiresource/svg/sidebar/love.svg</file>
+        <file>uiresource/svg/sidebar/mv.svg</file>
+        <file>uiresource/svg/sidebar/new.svg</file>
+        <file>uiresource/svg/sidebar/new_bg.svg</file>
+        <file>uiresource/svg/sidebar/radio.svg</file>
+        <file>uiresource/svg/sidebar/song.svg</file>
+        <file>uiresource/svg/sidebar/up.svg</file>
     </qresource>
 </RCC>

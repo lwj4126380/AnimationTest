@@ -32,6 +32,27 @@ void HoverableWidget::setTypeOne(QString text, QString svgPath, int svgWidth, in
     setLayout(layout);
 }
 
+void HoverableWidget::setTyleTwo(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight)
+{
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->setSpacing(10);
+    layout->setContentsMargins(18, 0, 0, 0);
+    QLabel *lb = new QLabel();
+    lb->installEventFilter(this);
+    lb->setObjectName("hoverWidgetLabel");
+    lb->setProperty("hoverLabelTag2", true);
+    lb->setText(text);
+
+    SvgButton *sb = new SvgButton(svgPath, svgWidth, svgHeight, "#5c5c5c", "black");
+    sb->installEventFilter(this);
+    sb->setObjectName("hoverWidgetSvgButton");
+    sb->resize(iconWidth, iconHeight);
+    layout->addWidget(sb);
+    layout->addWidget(lb);
+    layout->addStretch();
+    setLayout(layout);
+}
+
 void HoverableWidget::enterEvent(QEvent *event)
 {
     setCursor(Qt::PointingHandCursor);
@@ -82,4 +103,5 @@ bool HoverableWidget::eventFilter(QObject *watched, QEvent *event)
 void HoverableWidget::mousePressEvent(QMouseEvent *event)
 {
     setFocus();
+    emit clicked();
 }

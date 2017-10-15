@@ -10,6 +10,7 @@ public:
     explicit HoverableWidget(QWidget *parent = 0);
 
     void setTypeOne(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight);
+    void setTyleTwo(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight);
 
 protected:
     void enterEvent(QEvent *event);
@@ -18,6 +19,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
 
 signals:
+    void clicked();
 
 public slots:
 

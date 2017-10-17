@@ -26,17 +26,22 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     wLayout->setSpacing(0);
 
     HeadClickableListWidget *recommend = new HeadClickableListWidget(false, tr("Recommand"), QVariant());
-    recommend->addWidgetItem(":/uiresource/svg/sidebar/discover.svg", 18, 18, 18, 18, tr("Discover Music"));
-    recommend->addWidgetItem(":/uiresource/svg/sidebar/fm.svg", 18, 18, 18, 18, tr("Personal FM"));
-    recommend->addWidgetItem(":/uiresource/svg/sidebar/mv.svg", 18, 18, 18, 18, tr("MV"));
-    recommend->addWidgetItem(":/uiresource/svg/sidebar/friend.svg", 18, 18, 18, 18, tr("Friend"));
+    recommend->addWidgetItem("discoverLabel", tr("Discover Music"));
+    recommend->addWidgetItem("fmLabel", tr("Personal FM"));
+    recommend->addWidgetItem("mvLabel", tr("MV"));
+    recommend->addWidgetItem("friendLabel", tr("Friend"));
+
+//    recommend->addWidgetItem(":/uiresource/svg/sidebar/discover.svg", 18, 18, 18, 18, tr("Discover Music"));
+//    recommend->addWidgetItem(":/uiresource/svg/sidebar/fm.svg", 18, 18, 18, 18, tr("Personal FM"));
+//    recommend->addWidgetItem(":/uiresource/svg/sidebar/mv.svg", 18, 18, 18, 18, tr("MV"));
+//    recommend->addWidgetItem(":/uiresource/svg/sidebar/friend.svg", 18, 18, 18, 18, tr("Friend"));
     wLayout->addWidget(recommend);
 
     HeadClickableListWidget *myMusic = new HeadClickableListWidget(false, tr("My Music"), QVariant());
-    myMusic->addWidgetItem(":/uiresource/svg/sidebar/local.svg", 18, 18, 18, 18, tr("Local Music"));
-    myMusic->addWidgetItem(":/uiresource/svg/sidebar/dld.svg", 18, 18, 18, 18, tr("Down Manager"));
-    myMusic->addWidgetItem(":/uiresource/svg/sidebar/cloud.svg", 18, 18, 18, 18, tr("My Cloud"));
-    myMusic->addWidgetItem(":/uiresource/svg/sidebar/artist.svg", 18, 18, 18, 18, tr("My Artist"));
+//    myMusic->addWidgetItem(":/uiresource/svg/sidebar/local.svg", 18, 18, 18, 18, tr("Local Music"));
+//    myMusic->addWidgetItem(":/uiresource/svg/sidebar/dld.svg", 18, 18, 18, 18, tr("Down Manager"));
+//    myMusic->addWidgetItem(":/uiresource/svg/sidebar/cloud.svg", 18, 18, 18, 18, tr("My Cloud"));
+//    myMusic->addWidgetItem(":/uiresource/svg/sidebar/artist.svg", 18, 18, 18, 18, tr("My Artist"));
     wLayout->addWidget(myMusic);
 
     HeadClickableListWidget *createdPlayList = new HeadClickableListWidget(false, tr("Created Play List"), QVariant());

@@ -7,7 +7,8 @@
 #include <QStyle>
 
 HoverableWidget::HoverableWidget(QWidget *parent) : QWidget(parent),
-    bMouseIn(false)
+    bCheckedable(false),
+    bChecked(false)
 {
 
 }
@@ -19,9 +20,6 @@ void HoverableWidget::setTypeOne(QString text, QString btnObjName)
     layout->setSpacing(10);
     layout->setContentsMargins(0, 0, 15, 0);
     QLabel *lb = new QLabel();
-    lb->installEventFilter(this);
-    lb->setObjectName("hoverWidgetLabel");
-    lb->setProperty("hoverLabelTag1", true);
     lb->setText(text);
     layout->addWidget(lb);
 
@@ -31,25 +29,35 @@ void HoverableWidget::setTypeOne(QString text, QString btnObjName)
     setLayout(layout);
 }
 
-void HoverableWidget::setTyleTwo(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight)
+void HoverableWidget::setTyleTwo(QString text, QString lbObjName)
 {
+    bCheckedable = true;
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setProperty("HoverableWidgetType", "type2");
     QHBoxLayout *layout = new QHBoxLayout();
     layout->setSpacing(10);
     layout->setContentsMargins(18, 0, 0, 0);
     QLabel *lb = new QLabel();
-    lb->installEventFilter(this);
-    lb->setObjectName("hoverWidgetLabel");
-    lb->setProperty("hoverLabelTag2", true);
     lb->setText(text);
 
-//    SvgButton *sb = new SvgButton(svgPath, svgWidth, svgHeight, "#5c5c5c", "black");
-//    sb->installEventFilter(this);
-//    sb->setObjectName("hoverWidgetSvgButton");
-//    sb->resize(iconWidth, iconHeight);
-//    layout->addWidget(sb);
+    QLabel *lbIcon = new QLabel();
+    lbIcon->setProperty("LabelType", "sideListWidgetItemIcon");
+    lbIcon->setObjectName(lbObjName);
+    layout->addWidget(lbIcon);
     layout->addWidget(lb);
     layout->addStretch();
     setLayout(layout);
+}
+
+void HoverableWidget::setChecked(bool b)
+{
+    if (!bCheckedable)
+        return;
+
+    if (b ^ bChecked) {
+        changeHoverStyle(b);
+        bChecked = b;
+    }
 }
 
 void HoverableWidget::enterEvent(QEvent *event)
@@ -63,15 +71,19 @@ void HoverableWidget::enterEvent(QEvent *event)
 void HoverableWidget::leaveEvent(QEvent *event)
 {
     setCursor(Qt::ArrowCursor);
-    changeHoverStyle(false);
+    if (!bChecked)
+        changeHoverStyle(false);
 
     QWidget::leaveEvent(event);
 }
 
 void HoverableWidget::mousePressEvent(QMouseEvent *event)
 {
+    setChecked(true);
+
     setFocus();
     emit clicked();
+    QWidget::mousePressEvent(event);
 }
 
 void HoverableWidget::changeHoverStyle(bool bHover)

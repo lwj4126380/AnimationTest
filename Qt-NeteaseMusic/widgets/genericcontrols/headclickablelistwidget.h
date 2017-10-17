@@ -4,20 +4,22 @@
 #include <QWidget>
 
 class QListWidget;
+class QListWidgetItem;
+class HoverableWidget;
 
 class HeadClickableListWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit HeadClickableListWidget(bool bClickable, QString text, QVariant icons, QWidget *parent = 0);
-    void addWidgetItem(QString svgPath, int width, int height, int iconWidth, int iconHeight, QString text);
+    void addWidgetItem(QString objName, QString text);
 
 signals:
     void contentItemHeightChanged(int height);
-public slots:
 
 private:
     QListWidget *contentWidget;
+    HoverableWidget *preHoverableWidget;
 };
 
 #endif // HEADCLICKABLELISTWIDGET_H

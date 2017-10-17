@@ -2,6 +2,7 @@
 #define HOVERABLEWIDGET_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 
 class HoverableWidget : public QWidget
 {
@@ -10,7 +11,9 @@ public:
     explicit HoverableWidget(QWidget *parent = 0);
 
     void setTypeOne(QString text, QString btnObjName);
-    void setTyleTwo(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight);
+    void setTyleTwo(QString text, QString lbObjName);
+
+    void setChecked(bool b);
 
 protected:
     void enterEvent(QEvent *event);
@@ -26,7 +29,9 @@ signals:
 public slots:
 
 private:
-    bool bMouseIn;
+    bool bCheckedable;
+    bool bChecked;
+    QListWidget item;
 };
 
 #endif // HOVERABLEWIDGET_H

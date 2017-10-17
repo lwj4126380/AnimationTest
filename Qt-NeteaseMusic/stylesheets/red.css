@@ -108,6 +108,14 @@ QPushButton[ButtonType="functionButton"] {
     image: url(:/uiresource/svg/topbar/set-hover.svg);
 }
 
+HoverableWidget[HoverableWidgetType="type1"] > QLabel {
+    color: #eec1c1;
+}
+
+HoverableWidget[HoverableWidgetType="type1"] > QLabel[State="hover"] {
+    color: white;
+}
+
 #headArrBtn {
     max-width: 8px;
     min-width: 8px;
@@ -122,25 +130,48 @@ QPushButton[ButtonType="functionButton"] {
     image: url(:/uiresource/svg/topbar/head_arr-hover.svg);
 }
 
-/*#headArrBtn:hover {
-    image: url(:/uiresource/svg/topbar/head_arr-hover.svg);
-}*/
-
-
-/*QLabel[hoverLabelTag1="true"] {
-    color: #eec1c1;
+HoverableWidget[HoverableWidgetType="type2"] > QLabel {
+    color: #5c5c5c;
 }
 
-QLabel[hoverLabelTag1="true"]:hover {
-    color: white;
-}*/
-
-HoverableWidget[HoverableWidgetType="type1"] > QLabel {
-    color: #eec1c1;
+HoverableWidget[HoverableWidgetType="type2"] > QLabel[State="hover"] {
+    color: black;
 }
 
-HoverableWidget[HoverableWidgetType="type1"] > QLabel[State="hover"] {
-    color: white;
+QLabel[LabelType="sideListWidgetItemIcon"] {
+    max-width: 18px;
+    min-width: 18px;
+    max-height: 18px;
+    min-height: 18px;
+    padding: 0;
+}
+
+#discoverLabel {
+    image: url(:/uiresource/svg/sidebar/discover-normal.svg);
+}
+#discoverLabel[State="hover"] {
+    image: url(:/uiresource/svg/sidebar/discover-hover.svg);
+}
+
+#fmLabel {
+    image: url(:/uiresource/svg/sidebar/fm-normal.svg);
+}
+#fmLabel[State="hover"] {
+    image: url(:/uiresource/svg/sidebar/fm-hover.svg);
+}
+
+#mvLabel {
+    image: url(:/uiresource/svg/sidebar/mv-normal.svg);
+}
+#mvLabel[State="hover"] {
+    image: url(:/uiresource/svg/sidebar/mv-hover.svg);
+}
+
+#friendLabel {
+    image: url(:/uiresource/svg/sidebar/friend-normal.svg);
+}
+#friendLabel[State="hover"] {
+    image: url(:/uiresource/svg/sidebar/friend-hover.svg);
 }
 
 
@@ -237,14 +268,6 @@ QSplitter::handle
 
 #sideBarWidget {
     background-color: #f5f5f7;
-}
-
-QLabel[hoverLabelTag2="true"] {
-    color: #5c5c5c;
-}
-
-QLabel[hoverLabelTag2="true"]:hover {
-    color: black;
 }
 
 #headLabel {

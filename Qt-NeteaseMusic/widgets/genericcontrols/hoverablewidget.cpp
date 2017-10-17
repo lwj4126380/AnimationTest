@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QVariant>
 #include <QApplication>
+#include <QStyle>
 
 HoverableWidget::HoverableWidget(QWidget *parent) : QWidget(parent),
     bMouseIn(false)
@@ -13,19 +14,18 @@ HoverableWidget::HoverableWidget(QWidget *parent) : QWidget(parent),
 
 void HoverableWidget::setTypeOne(QString text, QString btnObjName)
 {
+    setProperty("HoverableWidgetType", "type1");
     QHBoxLayout *layout = new QHBoxLayout();
     layout->setSpacing(10);
-    layout->setContentsMargins(0, 0, 5, 0);
+    layout->setContentsMargins(0, 0, 15, 0);
     QLabel *lb = new QLabel();
     lb->installEventFilter(this);
     lb->setObjectName("hoverWidgetLabel");
     lb->setProperty("hoverLabelTag1", true);
     lb->setText(text);
     layout->addWidget(lb);
-//    lb->setEnabled(false);
 
-    QPushButton *sb = new QPushButton();
-    sb->installEventFilter(this);
+    QLabel *sb = new QLabel();
     sb->setObjectName(btnObjName);
     layout->addWidget(sb);
     setLayout(layout);
@@ -55,15 +55,7 @@ void HoverableWidget::setTyleTwo(QString text, QString svgPath, int svgWidth, in
 void HoverableWidget::enterEvent(QEvent *event)
 {
     setCursor(Qt::PointingHandCursor);
-    bMouseIn = true;
-
-    foreach (QObject *ob, children()) {
-        QEvent *e= new QEvent(QEvent::HoverEnter);
-        qApp->postEvent(ob, e);
-
-        QEvent *e1= new QEvent(QEvent::Enter);
-        qApp->postEvent(ob, e1);
-    }
+    changeHoverStyle(true);
 
     QWidget::enterEvent(event);
 }
@@ -71,36 +63,31 @@ void HoverableWidget::enterEvent(QEvent *event)
 void HoverableWidget::leaveEvent(QEvent *event)
 {
     setCursor(Qt::ArrowCursor);
-    bMouseIn = false;
-
-    foreach (QObject *ob, children()) {
-        QEvent *e= new QEvent(QEvent::HoverLeave);
-        qApp->postEvent(ob, e);
-
-        QEvent *e1= new QEvent(QEvent::Leave);
-        qApp->postEvent(ob, e1);
-    }
+    changeHoverStyle(false);
 
     QWidget::leaveEvent(event);
 }
 
-bool HoverableWidget::eventFilter(QObject *watched, QEvent *event)
-{
-    if (watched->objectName() == "hoverWidgetLabel" && event->type() == QEvent::HoverLeave) {
-        if (bMouseIn)
-            return true;
-    }
-
-    if (watched->objectName() == "hoverWidgetSvgButton" && event->type() == QEvent::Leave) {
-        if (bMouseIn)
-            return true;
-    }
-
-    return QWidget::eventFilter(watched, event);
-}
-#include <QDebug>
 void HoverableWidget::mousePressEvent(QMouseEvent *event)
 {
     setFocus();
     emit clicked();
+}
+
+void HoverableWidget::changeHoverStyle(bool bHover)
+{
+    foreach (QObject *ob, children()) {
+        if (bHover)
+            ob->setProperty("State", "hover");
+        else
+            ob->setProperty("State", "");
+
+
+        QLabel *lb = qobject_cast<QLabel *>(ob);
+        if (lb) {
+            lb->style()->unpolish(lb);
+            lb->style()->polish(lb);
+            lb->update();
+        }
+    }
 }

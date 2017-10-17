@@ -118,18 +118,31 @@ QPushButton[ButtonType="functionButton"] {
     image: url(:/uiresource/svg/topbar/head_arr-normal.svg);
 }
 
-#headArrBtn:hover {
+#headArrBtn[State="hover"] {
     image: url(:/uiresource/svg/topbar/head_arr-hover.svg);
 }
 
+/*#headArrBtn:hover {
+    image: url(:/uiresource/svg/topbar/head_arr-hover.svg);
+}*/
 
-QLabel[hoverLabelTag1="true"] {
+
+/*QLabel[hoverLabelTag1="true"] {
     color: #eec1c1;
 }
 
 QLabel[hoverLabelTag1="true"]:hover {
     color: white;
+}*/
+
+HoverableWidget[HoverableWidgetType="type1"] > QLabel {
+    color: #eec1c1;
 }
+
+HoverableWidget[HoverableWidgetType="type1"] > QLabel[State="hover"] {
+    color: white;
+}
+
 
 
 /*左边列表的qss*/

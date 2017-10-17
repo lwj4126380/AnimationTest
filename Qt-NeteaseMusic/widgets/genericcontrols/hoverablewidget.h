@@ -15,8 +15,10 @@ public:
 protected:
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
-    bool eventFilter(QObject *watched, QEvent *event);
     void mousePressEvent(QMouseEvent *event);
+
+private:
+    void changeHoverStyle(bool bHover);
 
 signals:
     void clicked();

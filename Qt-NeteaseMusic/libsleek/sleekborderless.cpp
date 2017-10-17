@@ -21,8 +21,8 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     _titleLayout = new QHBoxLayout();
     //titleWidget.setStyleSheet("background-color:pink;");
     _titleLayout->setObjectName("titleLayout");
-    _titleLayout->setSpacing( 0 );
-    _titleLayout->setContentsMargins(0, 0, 10, 0);
+    _titleLayout->setSpacing( 2 );
+    _titleLayout->setContentsMargins(0, 0, 0, 0);
 
     _titleButton = new QPushButton();
     _titleButton->setProperty("ButtonType", "TitleButton");
@@ -47,10 +47,10 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     _titleLayout->addLayout(topRightLayout);
     topRightLayout->setObjectName("topRightLayout");
     topRightLayout->setSpacing(0);
-    topRightLayout->setContentsMargins(0, 0, 0, 5);
+    topRightLayout->setContentsMargins(0, 0, 3, 0);
 
     HoverableWidget *hb = new HoverableWidget();
-    hb->setTypeOne(QString::fromLocal8Bit("未登录"), "headArrBtn");
+    hb->setTypeOne(tr("not login"), "headArrBtn");
     topRightLayout->addWidget(hb);
 
     //Skin button
@@ -76,15 +76,15 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
 
     QLabel *label = new QLabel();
     label->setObjectName("vertical1pixLabel");
-    topRightLayout->addWidget(label);
+    _titleLayout->addWidget(label);
 
     // System buttons
 
     QHBoxLayout *systemButtonLayout = new QHBoxLayout();
-    topRightLayout->addLayout(systemButtonLayout);
+    _titleLayout->addLayout(systemButtonLayout);
     systemButtonLayout->setObjectName("systemButtonLayout");
     systemButtonLayout->setSpacing(0);
-    systemButtonLayout->setContentsMargins(15, 0, 0, 0);
+    systemButtonLayout->setContentsMargins(12, 0, 10, 0);
 
     //Minimode
     QPushButton *pushButtonMiniMode = new QPushButton();

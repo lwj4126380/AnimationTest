@@ -22,9 +22,11 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     //titleWidget.setStyleSheet("background-color:pink;");
     _titleLayout->setObjectName("titleLayout");
     _titleLayout->setSpacing( 0 );
-    _titleLayout->setContentsMargins(0, 0, 15, 0);
+    _titleLayout->setContentsMargins(0, 0, 10, 0);
 
-    _titleButton = new SvgButton(":/uiresource/svg/topbar/logo.svg", 115, 20,"white", "white", this);
+    _titleButton = new QPushButton();
+    _titleButton->setProperty("ButtonType", "TitleButton");
+    _titleButton->setCursor(Qt::PointingHandCursor);
     _titleButton->setObjectName("titleButton");
     _titleButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Expanding );
     _titleLayout->addWidget(_titleButton);
@@ -44,28 +46,31 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     QHBoxLayout *topRightLayout = new QHBoxLayout();
     _titleLayout->addLayout(topRightLayout);
     topRightLayout->setObjectName("topRightLayout");
-    topRightLayout->setSpacing(14);
-    topRightLayout->setMargin(0);
+    topRightLayout->setSpacing(0);
+    topRightLayout->setContentsMargins(0, 0, 0, 5);
 
     HoverableWidget *hb = new HoverableWidget();
-    hb->setTypeOne(QString::fromLocal8Bit("未登录"),":/uiresource/svg/topbar/head_arr.svg", 8, 4, 8, 8);
+    hb->setTypeOne(QString::fromLocal8Bit("未登录"), "headArrBtn");
     topRightLayout->addWidget(hb);
 
     //Skin button
-    SvgButton *pushButtonSkin = new SvgButton(":/uiresource/svg/topbar/skin.svg", 16, 16,"#eec1c1", "white", this);
-    pushButtonSkin->setProperty("functionButton", true);
+    QPushButton *pushButtonSkin = new QPushButton();
+    pushButtonSkin->setProperty("ButtonType", "functionButton");
+    pushButtonSkin->setCursor(Qt::PointingHandCursor);
     pushButtonSkin->setObjectName( "pushButtonSkin" );
     topRightLayout->addWidget( pushButtonSkin );
 
     //Msg button
-    SvgButton *pushButtonMsg = new SvgButton(":/uiresource/svg/topbar/msg.svg", 16, 16,"#eec1c1", "white", this);
-    pushButtonMsg->setProperty("functionButton", true);
+    QPushButton *pushButtonMsg = new QPushButton();
+    pushButtonMsg->setProperty("ButtonType", "functionButton");
+    pushButtonMsg->setCursor(Qt::PointingHandCursor);
     pushButtonMsg->setObjectName( "pushButtonMsg" );
     topRightLayout->addWidget( pushButtonMsg );
 
     //Set button
-    SvgButton *pushButtonSet = new SvgButton(":/uiresource/svg/topbar/set.svg", 18, 16,"#eec1c1", "white", this);
-    pushButtonSet->setProperty("functionButton", true);
+    QPushButton *pushButtonSet = new QPushButton();
+    pushButtonSet->setProperty("ButtonType", "functionButton");
+    pushButtonSet->setCursor(Qt::PointingHandCursor);
     pushButtonSet->setObjectName( "pushButtonSet" );
     topRightLayout->addWidget( pushButtonSet );
 
@@ -79,31 +84,35 @@ SleekBorderless::SleekBorderless(HWND hWnd, QWidget *mainPanel) : QWinWidget(hWn
     topRightLayout->addLayout(systemButtonLayout);
     systemButtonLayout->setObjectName("systemButtonLayout");
     systemButtonLayout->setSpacing(0);
-    systemButtonLayout->setMargin(0);
+    systemButtonLayout->setContentsMargins(15, 0, 0, 0);
 
     //Minimode
-    SvgButton *pushButtonMiniMode = new SvgButton(":/uiresource/svg/topbar/mini.svg", 13, 11,"#e29595", "white", this);
-    pushButtonMiniMode->setProperty("systemButton", true);
+    QPushButton *pushButtonMiniMode = new QPushButton();
+    pushButtonMiniMode->setProperty("ButtonType", "systemButton");
+    pushButtonMiniMode->setCursor(Qt::PointingHandCursor);
     pushButtonMiniMode->setObjectName( "pushButtonMiniMode" );
     systemButtonLayout->addWidget( pushButtonMiniMode );
 
     // Minimize
-    SvgButton *pushButtonMinimize = new SvgButton(":/uiresource/svg/topbar/zoomout.svg", 13, 11,"#e29595", "white", this);
-    pushButtonMinimize->setProperty("systemButton", true);
+    QPushButton *pushButtonMinimize = new QPushButton();
+    pushButtonMinimize->setProperty("ButtonType", "systemButton");
+    pushButtonMinimize->setCursor(Qt::PointingHandCursor);
     pushButtonMinimize->setObjectName( "pushButtonMinimize" );
     systemButtonLayout->addWidget( pushButtonMinimize );
     QObject::connect( pushButtonMinimize, SIGNAL( clicked() ), this, SLOT( pushButtonMinimizeClicked() ) );
 
     // Maximize
-    SvgButton *pushButtonMaximize = new SvgButton(":/uiresource/svg/topbar/zoomin.svg", 13, 11,"#e29595", "white", this);
-    pushButtonMaximize->setProperty("systemButton", true);
-    pushButtonMaximize->setObjectName( "pushButtonMaximize" );
+    QPushButton *pushButtonMaximize = new QPushButton();
+    pushButtonMaximize->setProperty("ButtonType", "systemButton");
+    pushButtonMaximize->setCursor(Qt::PointingHandCursor);
+    pushButtonMaximize->setObjectName("pushButtonMaximize");
     systemButtonLayout->addWidget( pushButtonMaximize );
     QObject::connect( pushButtonMaximize, SIGNAL( clicked() ), this, SLOT( pushButtonMaximizeClicked() ) );
 
     //Close
-    SvgButton *pushButtonClose = new SvgButton(":/uiresource/svg/topbar/close.svg", 13, 11,"#e29595", "white", this);
-    pushButtonClose->setProperty("systemButton", true);
+    QPushButton *pushButtonClose = new QPushButton();
+    pushButtonClose->setProperty("ButtonType", "systemButton");
+    pushButtonClose->setCursor(Qt::PointingHandCursor);
     pushButtonClose->setObjectName( "pushButtonClose" );
     systemButtonLayout->addWidget( pushButtonClose );
     QObject::connect( pushButtonClose, SIGNAL( clicked() ), this, SLOT( pushButtonCloseClicked() ) );

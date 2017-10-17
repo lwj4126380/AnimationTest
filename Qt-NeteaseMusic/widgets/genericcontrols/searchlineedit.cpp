@@ -6,9 +6,8 @@ SearchLineEdit::SearchLineEdit(QWidget *parent)
 {
     setObjectName("searchLineEdit");
     setPlaceholderText(tr("search music, user"));
-    searchBtn = new SvgButton(":/uiresource/svg/topbar/search.svg", 13, 13, "#c77373", "white");
+    searchBtn = new QPushButton();
     searchBtn->setObjectName("pButtonKeyboard");
-    searchBtn->setFixedSize(QSize(15, 15));
     searchBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     QHBoxLayout* layout = new QHBoxLayout();

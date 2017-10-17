@@ -2,7 +2,7 @@
 #define SEARCHLINEEDIT_H
 
 #include <QLineEdit>
-#include "svgbutton.h"
+#include <QPushButton>
 
 class SearchLineEdit : public QLineEdit
 {
@@ -11,7 +11,7 @@ public:
     explicit SearchLineEdit(QWidget *parent=Q_NULLPTR);
 
 private:
-    SvgButton *searchBtn;
+    QPushButton *searchBtn;
 };
 
 #endif // SEARCHLINEEDIT_H

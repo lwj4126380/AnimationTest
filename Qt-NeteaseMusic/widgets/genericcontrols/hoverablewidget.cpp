@@ -1,5 +1,5 @@
 #include "hoverablewidget.h"
-#include "svgbutton.h"
+#include <QPushButton>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QVariant>
@@ -11,7 +11,7 @@ HoverableWidget::HoverableWidget(QWidget *parent) : QWidget(parent),
 
 }
 
-void HoverableWidget::setTypeOne(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight)
+void HoverableWidget::setTypeOne(QString text, QString btnObjName)
 {
     QHBoxLayout *layout = new QHBoxLayout();
     layout->setSpacing(10);
@@ -24,10 +24,9 @@ void HoverableWidget::setTypeOne(QString text, QString svgPath, int svgWidth, in
     layout->addWidget(lb);
 //    lb->setEnabled(false);
 
-    SvgButton *sb = new SvgButton(svgPath, svgWidth, svgHeight, "#eec1c1", "white");
+    QPushButton *sb = new QPushButton();
     sb->installEventFilter(this);
-    sb->setObjectName("hoverWidgetSvgButton");
-    sb->resize(iconWidth, iconHeight);
+    sb->setObjectName(btnObjName);
     layout->addWidget(sb);
     setLayout(layout);
 }
@@ -43,11 +42,11 @@ void HoverableWidget::setTyleTwo(QString text, QString svgPath, int svgWidth, in
     lb->setProperty("hoverLabelTag2", true);
     lb->setText(text);
 
-    SvgButton *sb = new SvgButton(svgPath, svgWidth, svgHeight, "#5c5c5c", "black");
-    sb->installEventFilter(this);
-    sb->setObjectName("hoverWidgetSvgButton");
-    sb->resize(iconWidth, iconHeight);
-    layout->addWidget(sb);
+//    SvgButton *sb = new SvgButton(svgPath, svgWidth, svgHeight, "#5c5c5c", "black");
+//    sb->installEventFilter(this);
+//    sb->setObjectName("hoverWidgetSvgButton");
+//    sb->resize(iconWidth, iconHeight);
+//    layout->addWidget(sb);
     layout->addWidget(lb);
     layout->addStretch();
     setLayout(layout);

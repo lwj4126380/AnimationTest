@@ -9,7 +9,7 @@ class HoverableWidget : public QWidget
 public:
     explicit HoverableWidget(QWidget *parent = 0);
 
-    void setTypeOne(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight);
+    void setTypeOne(QString text, QString btnObjName);
     void setTyleTwo(QString text, QString svgPath, int svgWidth, int svgHeight, int iconWidth, int iconHeight);
 
 protected:

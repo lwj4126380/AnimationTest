@@ -5,7 +5,7 @@
 #include <QGridLayout>
 #include <memory>
 #include <QLabel>
-#include "svgbutton.h"
+#include <QPushButton>
 
 #include "qwinwidget.h"
 class SleekBorderless : public QWinWidget {
@@ -36,7 +36,7 @@ protected:
     QHBoxLayout* _titleLayout;
     QWidget* _centralWidget;
     QWidget* _titleWidget;
-    SvgButton* _titleButton;
+    QPushButton* _titleButton;
     QWidget* _mainPanel;
     //QVBoxLayout* _verticalLayout;
     //QHBoxLayout* _titleLayout;

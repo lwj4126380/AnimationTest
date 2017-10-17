@@ -21,19 +21,107 @@ QPushButton {
     min-width: 150px;
 }
 
-SvgButton[systemButton="true"] {
-    max-width: 23px;
-    min-width: 23px;
+#pButtonKeyboard {
+    qproperty-iconSize: 13px 13px;
+    max-width: 15px;
+    min-width: 15px;
     max-height: 15px;
-    min-height: 15x;
+    min-height: 15px;
+    image: url(:/uiresource/svg/topbar/search-normal.svg);
 }
 
-SvgButton[functionButton="true"] {
-    max-width: 26px;
-    min-width: 26px;
-    max-height: 22px;
-    min-height: 22x;
+#pButtonKeyboard:hover {
+    image: url(:/uiresource/svg/topbar/search-hover.svg);
 }
+
+#titleButton {
+    max-width: 115px;
+    min-width: 115px;
+    max-height: 20px;
+    min-height: 20px;
+    image: url(:/uiresource/svg/topbar/logo.svg);
+    padding-left: 15px;
+}
+
+QPushButton[ButtonType="systemButton"] {
+    max-width: 13px;
+    min-width: 13px;
+    max-height: 13px;
+    min-height: 13px;
+    padding: 1px 5px 1px 5px;
+}
+
+#pushButtonMiniMode {
+    image: url(:/uiresource/svg/topbar/mini-normal.svg);
+}
+#pushButtonMiniMode:hover {
+    image: url(:/uiresource/svg/topbar/mini-hover.svg);
+}
+
+#pushButtonMinimize {
+    image: url(:/uiresource/svg/topbar/zoomout-normal.svg);
+}
+#pushButtonMinimize:hover {
+    image: url(:/uiresource/svg/topbar/zoomout-hover.svg);
+}
+
+#pushButtonMaximize {
+    image: url(:/uiresource/svg/topbar/zoomin-normal.svg);
+}
+#pushButtonMaximize:hover {
+    image: url(:/uiresource/svg/topbar/zoomin-hover.svg);
+}
+
+#pushButtonClose {
+    image: url(:/uiresource/svg/topbar/close-normal.svg);
+}
+#pushButtonClose:hover {
+    image: url(:/uiresource/svg/topbar/close-hover.svg);
+}
+
+QPushButton[ButtonType="functionButton"] {
+    max-width: 16px;
+    min-width: 16px;
+    max-height: 16px;
+    min-height: 16px;
+    padding: 3px 13px 3px 13px;
+}
+
+#pushButtonSkin {
+    image: url(:/uiresource/svg/topbar/skin-normal.svg);
+}
+#pushButtonSkin:hover {
+    image: url(:/uiresource/svg/topbar/skin-hover.svg);
+}
+
+#pushButtonMsg {
+    image: url(:/uiresource/svg/topbar/msg-normal.svg);
+}
+#pushButtonMsg:hover {
+    image: url(:/uiresource/svg/topbar/msg-hover.svg);
+}
+
+#pushButtonSet {
+    image: url(:/uiresource/svg/topbar/set-normal.svg);
+}
+#pushButtonSet:hover {
+    image: url(:/uiresource/svg/topbar/set-hover.svg);
+}
+
+#headArrBtn {
+    max-width: 8px;
+    min-width: 8px;
+    max-height: 4px;
+    min-height: 4px;
+
+    padding: 2px 0px 2px 0px;
+    image: url(:/uiresource/svg/topbar/head_arr-normal.svg);
+}
+
+#headArrBtn:hover {
+    image: url(:/uiresource/svg/topbar/head_arr-hover.svg);
+}
+
 
 QLabel[hoverLabelTag1="true"] {
     color: #eec1c1;

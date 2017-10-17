@@ -83,7 +83,8 @@ void HoverableWidget::mousePressEvent(QMouseEvent *event)
 
     setFocus();
     emit clicked();
-    QWidget::mousePressEvent(event);
+    if (bCheckedable)
+        QWidget::mousePressEvent(event);
 }
 
 void HoverableWidget::changeHoverStyle(bool bHover)

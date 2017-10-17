@@ -18,21 +18,23 @@ include (./libsleek/libsleek.pri)
 INCLUDEPATH += $$PWD/libsleek
 
 INCLUDEPATH += $$PWD/widgets/genericcontrols
-
+INCLUDEPATH += $$PWD/utils
 SOURCES += main.cpp\
         mainwindow.cpp \
     widgets/genericcontrols/svgbutton.cpp \
     widgets/genericcontrols/hoverablewidget.cpp \
     widgets/genericcontrols/searchlineedit.cpp \
     widgets/genericcontrols/headclickablelistwidget.cpp \
-    widgets/uicomponent/sidebar.cpp
+    widgets/uicomponent/sidebar.cpp \
+    utils/qsshelper.cpp
 
 HEADERS  += mainwindow.h \
     widgets/genericcontrols/svgbutton.h \
     widgets/genericcontrols/hoverablewidget.h \
     widgets/genericcontrols/searchlineedit.h \
     widgets/genericcontrols/headclickablelistwidget.h \
-    widgets/uicomponent/sidebar.h
+    widgets/uicomponent/sidebar.h \
+    utils/qsshelper.h
 
 FORMS    += mainwindow.ui
 

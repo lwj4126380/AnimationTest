@@ -10,8 +10,16 @@ class HoverableWidget;
 class HeadClickableListWidget : public QWidget
 {
     Q_OBJECT
+
 public:
-    explicit HeadClickableListWidget(bool bClickable, QString text, QVariant icons, QWidget *parent = 0);
+    enum ClickableWidgetType {
+        ClickableWithAddBtn,
+        Clickable,
+        NotClickable,
+    };
+
+public:
+    explicit HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent = 0);
     void addWidgetItem(QString objName, QString text);
 
 signals:

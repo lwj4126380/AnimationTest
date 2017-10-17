@@ -205,12 +205,8 @@ LRESULT CALLBACK SleekWindowClass::WndProc( HWND hWnd, UINT message, WPARAM wPar
         wp.length = sizeof( WINDOWPLACEMENT );
         GetWindowPlacement( hWnd, &wp );
         if ( wp.showCmd == SW_MAXIMIZE ) {
-            QPushButton* pushButtonMaximize = win->getSleekBorderless()->findChild<QPushButton*>( "pushButtonMaximize" );
-//            pushButtonMaximize->setStyleSheet( "#pushButtonMaximize {image: url(:/icons/header/Restore.png);} #pushButtonMaximize:hover { image: url(:/icons/header/RestoreHover.png); }" );
             win->getSleekBorderless()->setGeometry( 8, 8, winrect.right - 16, winrect.bottom - 16);
         } else {
-            QPushButton* pushButtonMaximize = win->getSleekBorderless()->findChild<QPushButton*>( "pushButtonMaximize" );
-//            pushButtonMaximize->setStyleSheet( "#pushButtonMaximize {image: url(:/icons/header/Maximize.png);} #pushButtonMaximize:hover { image: url(:/icons/header/MaximizeHover.png); }" );
             win->getSleekBorderless()->setGeometry( 0, 0, winrect.right, winrect.bottom);
         }
         break;

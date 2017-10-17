@@ -39,4 +39,4 @@ FORMS    += mainwindow.ui
 RESOURCES += \
     resource.qrc
 
-TRANSLATIONS += zh_en.ts
+TRANSLATIONS += zhCN.ts

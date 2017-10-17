@@ -42,5 +42,11 @@
         <file>uiresource/svg/topbar/zoomin-normal.svg</file>
         <file>uiresource/svg/topbar/zoomout-hover.svg</file>
         <file>uiresource/svg/topbar/zoomout-normal.svg</file>
+        <file>uiresource/svg/sidebar/add-hover.svg</file>
+        <file>uiresource/svg/sidebar/add-normal.svg</file>
+        <file>uiresource/svg/sidebar/down-hover.svg</file>
+        <file>uiresource/svg/sidebar/down-normal.svg</file>
+        <file>uiresource/svg/sidebar/up-hover.svg</file>
+        <file>uiresource/svg/sidebar/up-normal.svg</file>
     </qresource>
 </RCC>

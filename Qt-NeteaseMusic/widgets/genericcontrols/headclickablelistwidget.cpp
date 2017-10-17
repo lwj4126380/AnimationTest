@@ -5,9 +5,10 @@
 #include <QScrollBar>
 #include <QDebug>
 #include <QTimer>
+#include <QPushButton>
 #include "hoverablewidget.h"
 
-HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
+HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , preHoverableWidget(Q_NULLPTR)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -15,12 +16,34 @@ HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, 
     layout->setSpacing(0);
     layout->setMargin(0);
 
-    if (bClickable) {
-
-    } else {
+    if (type == NotClickable) {
         QLabel *lb = new QLabel(text);
         lb->setObjectName("headLabel");
         layout->addWidget(lb);
+    } else {
+        QHBoxLayout *hb = new QHBoxLayout();
+        hb->setContentsMargins(0, 0, 8, 0);
+        hb->setSpacing(8);
+        QPushButton *pb = new QPushButton(text);
+        pb->setCursor(Qt::PointingHandCursor);
+        pb->setObjectName("headPushButton");
+        hb->addWidget(pb);
+
+        if (type == ClickableWithAddBtn) {
+            QPushButton *addLb = new QPushButton();
+            addLb->setCursor(Qt::PointingHandCursor);
+            addLb->setObjectName("addSheetButton");
+            addLb->setProperty("ButtonType", "sideWidgetHead");
+            hb->addWidget(addLb);
+        }
+
+        QPushButton *arrLb = new QPushButton();
+        arrLb->setCursor(Qt::PointingHandCursor);
+        arrLb->setObjectName("arrButton");
+        arrLb->setProperty("ButtonType", "sideWidgetHead");
+
+        hb->addWidget(arrLb);
+        layout->addLayout(hb);
     }
 
     contentWidget = new QListWidget();
@@ -29,6 +52,7 @@ HeadClickableListWidget::HeadClickableListWidget(bool bClickable, QString text, 
     contentWidget->setObjectName("leftListWidget");
     contentWidget->setFrameStyle(QFrame::NoFrame);
     contentWidget->setFocusPolicy(Qt::NoFocus);
+    contentWidget->setFixedHeight(0);
     layout->addWidget(contentWidget);
     setLayout(layout);
 }

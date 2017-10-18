@@ -2,10 +2,22 @@
 #define HEADCLICKABLELISTWIDGET_H
 
 #include <QWidget>
+#include <QListWidget>
 
 class QListWidget;
 class QListWidgetItem;
 class HoverableWidget;
+
+class ContextMenuListWidget : public QListWidget {
+    Q_OBJECT
+
+public:
+    explicit ContextMenuListWidget(QWidget *parent = Q_NULLPTR);
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
+
+};
 
 class HeadClickableListWidget : public QWidget
 {
@@ -25,6 +37,7 @@ public:
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event);
+//    void contextMenuEvent(QContextMenuEvent *event);
 
 private:
     void expandListWidgetOrNot();
@@ -37,7 +50,7 @@ signals:
     void listItemClicked();
 
 private:
-    QListWidget *contentWidget;
+    ContextMenuListWidget *contentWidget;
     HoverableWidget *preHoverableWidget;
     bool bExpanded;
 };

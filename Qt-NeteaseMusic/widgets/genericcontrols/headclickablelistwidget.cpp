@@ -8,7 +8,29 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QEvent>
+#include <QMenu>
+#include <QAction>
 #include "hoverablewidget.h"
+
+
+
+ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
+    QListWidget(parent)
+{
+
+}
+
+void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu *menu = new QMenu(this);
+    QAction *action = new QAction(this);
+    action->setText(QString::fromLocal8Bit("保存"));
+    menu->addAction(action);
+    menu->addSeparator();//增加分隔行
+    menu->exec(QCursor::pos());
+}
+
+
 
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , preHoverableWidget(Q_NULLPTR)
@@ -53,7 +75,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
         layout->addLayout(hb);
     }
 
-    contentWidget = new QListWidget();
+    contentWidget = new ContextMenuListWidget();
     contentWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");
@@ -105,6 +127,16 @@ bool HeadClickableListWidget::eventFilter(QObject *watched, QEvent *event)
 
     return QWidget::eventFilter(watched, event);
 }
+
+//void HeadClickableListWidget::contextMenuEvent(QContextMenuEvent *event)
+//{
+//    QMenu *menu = new QMenu(this);
+//    QAction *action = new QAction(this);
+//    action->setText(QString::fromLocal8Bit("保存"));
+//    menu->addAction(action);
+//    menu->addSeparator();//增加分隔行
+//    menu->exec(QCursor::pos());
+//}
 
 void HeadClickableListWidget::expandListWidgetOrNot()
 {

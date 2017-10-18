@@ -24,8 +24,8 @@ MainWindow::MainWindow(QApplication *app, bool isMainWindow) :
     la->addWidget(sp);
     sp->setStretchFactor(0, 1);
     sp->setStretchFactor(1, 10);
-
-    centerPrimaryScreen();
+SleekWindow::move(200, 200);
+//    centerPrimaryScreen();
 }
 
 MainWindow::MainWindow(QApplication *app, SleekWindow *parent) :

@@ -11,23 +11,56 @@
 #include <QMenu>
 #include <QAction>
 #include "hoverablewidget.h"
-
-
-
+#include <QApplication>
+#include "mainwindow.h"
+#include <QGraphicsDropShadowEffect>
+extern MainWindow *mm;
 ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
     QListWidget(parent)
 {
-
+//    setContextMenuPolicy(Qt::CustomContextMenu);
+//    connect(this, &ContextMenuListWidget::customContextMenuRequested, this, [&](const QPoint &pos){
+//        qDebug() << "BBBBBBBBBBBB";
+//        QMenu *menu = new QMenu(this);
+//        menu->setObjectName("menu");
+//        QAction *action = new QAction(this);
+//        action->setText(QString::fromLocal8Bit("保存"));
+//        menu->addAction(action);
+//        menu->addSeparator();//增加分隔行
+//        menu->exec(pos);
+//    });
 }
 
 void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-    QMenu *menu = new QMenu(this);
-    QAction *action = new QAction(this);
-    action->setText(QString::fromLocal8Bit("保存"));
-    menu->addAction(action);
-    menu->addSeparator();//增加分隔行
-    menu->exec(QCursor::pos());
+    qDebug() << "AAAAAAA";
+
+    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
+
+    shadow_effect->setOffset(0, 0);
+
+    shadow_effect->setColor(Qt::gray);
+
+    shadow_effect->setBlurRadius(8);
+
+
+    QLabel *w = new QLabel(mm);
+    w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
+    w->setObjectName("ddd");
+    w->setGraphicsEffect(shadow_effect);
+    w->setText("FFFFFFFFFF");
+    w->setFocus();
+    w->installEventFilter(this);
+    w->move(event->pos());
+    w->show();
+}
+int i=0;
+bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched->objectName() == "ddd" && event->type() == QEvent::FocusOut) {
+        watched->deleteLater();
+    }
+    return QListWidget::eventFilter(watched, event);
 }
 
 

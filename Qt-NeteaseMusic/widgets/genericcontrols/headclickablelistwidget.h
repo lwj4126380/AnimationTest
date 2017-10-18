@@ -16,7 +16,7 @@ public:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
-
+    bool eventFilter(QObject *watched, QEvent *event);
 };
 
 class HeadClickableListWidget : public QWidget

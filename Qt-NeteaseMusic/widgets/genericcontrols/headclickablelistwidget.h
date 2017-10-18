@@ -20,11 +20,15 @@ public:
 
 public:
     explicit HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent = 0);
-    void addWidgetItem(QString objName, QString text);
+    void addOrInsertWidgetItem(QString objName, QString text, bool bInsert=false, int index=-1);
     void clearSelection();
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event);
 
 private:
     void expandListWidgetOrNot();
+    void onFinishAddSongList();
 
 private slots:
     void addEditableWidget();

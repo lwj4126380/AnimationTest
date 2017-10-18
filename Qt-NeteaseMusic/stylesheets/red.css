@@ -209,6 +209,13 @@ QLabel[LabelType="sideListWidgetItemIcon"] {
     image: url(:/uiresource/svg/sidebar/love-hover.svg);
 }
 
+#songListLabel {
+    image: url(:/uiresource/svg/sidebar/song-normal.svg);
+}
+#songListLabel[State="hover"] {
+    image: url(:/uiresource/svg/sidebar/song-hover.svg);
+}
+
 
 
 /*左边列表的qss*/
@@ -330,12 +337,33 @@ QPushButton[ButtonType="sideWidgetHead"] {
     image: url(:/uiresource/svg/sidebar/add-hover.svg);
 }
 
-#arrButton {
+#arrButton[expand="true"] {
     padding-top: 3px;
     image: url(:/uiresource/svg/sidebar/down-normal.svg);
 }
-#arrButton:hover {
+#arrButton[expand="true"]:hover {
     image: url(:/uiresource/svg/sidebar/down-hover.svg);
+}
+
+#arrButton[expand="false"] {
+    padding-top: 3px;
+    image: url(:/uiresource/svg/sidebar/next-normal.svg);
+}
+#arrButton[expand="false"]:hover {
+    image: url(:/uiresource/svg/sidebar/next-hover.svg);
+}
+
+#addSongListLineEdit {
+    max-width: 133px;
+    min-width: 133px;
+    max-height: 23px;
+    min-height: 23px;
+    border: 1px solid #e1e1e2;
+    color: #a9a9a9;
+}
+
+#addSongListLineEdit:focus {
+    color: black;
 }
 
 #leftListWidget {

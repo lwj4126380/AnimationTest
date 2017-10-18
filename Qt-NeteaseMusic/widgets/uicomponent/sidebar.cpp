@@ -28,23 +28,23 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent),
 
     HeadClickableListWidget *recommend = new HeadClickableListWidget(HeadClickableListWidget::NotClickable, tr("Recommand"), QVariant());
     connect(recommend, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
-    recommend->addWidgetItem("discoverLabel", tr("Discover Music"));
-    recommend->addWidgetItem("fmLabel", tr("Personal FM"));
-    recommend->addWidgetItem("mvLabel", tr("MV"));
-    recommend->addWidgetItem("friendLabel", tr("Friend"));
+    recommend->addOrInsertWidgetItem("discoverLabel", tr("Discover Music"));
+    recommend->addOrInsertWidgetItem("fmLabel", tr("Personal FM"));
+    recommend->addOrInsertWidgetItem("mvLabel", tr("MV"));
+    recommend->addOrInsertWidgetItem("friendLabel", tr("Friend"));
     wLayout->addWidget(recommend);
 
     HeadClickableListWidget *myMusic = new HeadClickableListWidget(HeadClickableListWidget::NotClickable, tr("My Music"), QVariant());
     connect(myMusic, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
-    myMusic->addWidgetItem("localLabel", tr("Local Music"));
-    myMusic->addWidgetItem("dldLabel", tr("Download Manager"));
-    myMusic->addWidgetItem("cloudLabel", tr("My Cloud"));
-    myMusic->addWidgetItem("artistLabel", tr("My Artist"));
+    myMusic->addOrInsertWidgetItem("localLabel", tr("Local Music"));
+    myMusic->addOrInsertWidgetItem("dldLabel", tr("Download Manager"));
+    myMusic->addOrInsertWidgetItem("cloudLabel", tr("My Cloud"));
+    myMusic->addOrInsertWidgetItem("artistLabel", tr("My Artist"));
     wLayout->addWidget(myMusic);
 
     HeadClickableListWidget *createdPlayList = new HeadClickableListWidget(HeadClickableListWidget::ClickableWithAddBtn, tr("Created Play List"), QVariant());
     connect(createdPlayList, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
-    createdPlayList->addWidgetItem("loveLabel", tr("My Love Music"));
+    createdPlayList->addOrInsertWidgetItem("loveLabel", tr("My Love Music"));
     wLayout->addWidget(createdPlayList);
 
     HeadClickableListWidget *playListCollection = new HeadClickableListWidget(HeadClickableListWidget::Clickable, tr("Stored Play List"), QVariant());
@@ -53,16 +53,8 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent),
 
     wLayout->addStretch();
     widget->setLayout(wLayout);
-    layout->addWidget(scrollArea);
+    layout->addWidget(scrollArea); // add 播放的那个widget
     setLayout(layout);
-}
-
-void SideBar::paintEvent(QPaintEvent *event)
-{
-    QStyleOption  opt;
-    opt.init(this);
-    QPainter  p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void SideBar::clearSelected()

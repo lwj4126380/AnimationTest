@@ -12,7 +12,6 @@ public:
     explicit SideBar(QWidget *parent = 0);
 
 protected:
-    void paintEvent(QPaintEvent *event);
 
 signals:
 

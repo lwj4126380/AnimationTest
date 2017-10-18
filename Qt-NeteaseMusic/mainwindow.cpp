@@ -22,6 +22,8 @@ MainWindow::MainWindow(QApplication *app, bool isMainWindow) :
     widget->setStyleSheet("background-color: white");
     sp->addWidget(widget);
     la->addWidget(sp);
+    sp->setStretchFactor(0, 1);
+    sp->setStretchFactor(1, 10);
 
     centerPrimaryScreen();
 }

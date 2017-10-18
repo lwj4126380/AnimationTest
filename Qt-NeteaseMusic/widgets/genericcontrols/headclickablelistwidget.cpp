@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QEvent>
 #include "hoverablewidget.h"
 
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
@@ -27,6 +28,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
         hb->setContentsMargins(0, 0, 8, 0);
         hb->setSpacing(8);
         QPushButton *pb = new QPushButton(text);
+        connect(pb, &QPushButton::clicked, this, &HeadClickableListWidget::expandListWidgetOrNot);
         pb->setCursor(Qt::PointingHandCursor);
         pb->setObjectName("headPushButton");
         hb->addWidget(pb);
@@ -41,8 +43,10 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
         }
 
         QPushButton *arrLb = new QPushButton();
+        connect(arrLb, &QPushButton::clicked, this, &HeadClickableListWidget::expandListWidgetOrNot);
         arrLb->setCursor(Qt::PointingHandCursor);
         arrLb->setObjectName("arrButton");
+        arrLb->setProperty("expand", true);
         arrLb->setProperty("ButtonType", "sideWidgetHead");
 
         hb->addWidget(arrLb);
@@ -60,7 +64,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
     setLayout(layout);
 }
 
-void HeadClickableListWidget::addWidgetItem(QString objName, QString text)
+void HeadClickableListWidget::addOrInsertWidgetItem(QString objName, QString text, bool bInsert, int index)
 {
     HoverableWidget *widget = new HoverableWidget();
     widget->setTyleTwo(text, objName);
@@ -77,7 +81,10 @@ void HeadClickableListWidget::addWidgetItem(QString objName, QString text)
         preHoverableWidget = hw;
     });
 
-    contentWidget->addItem(item);
+    if (!bInsert)
+        contentWidget->addItem(item);
+    else
+        contentWidget->insertItem(index, item);
     contentWidget->setItemWidget(item, widget);
     contentWidget->setFixedHeight(32*contentWidget->count());
 }
@@ -91,8 +98,41 @@ void HeadClickableListWidget::clearSelection()
     preHoverableWidget = Q_NULLPTR;
 }
 
+bool HeadClickableListWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched->objectName() == "addSongListLineEdit" && event->type() == QEvent::FocusOut)
+        onFinishAddSongList();
+
+    return QWidget::eventFilter(watched, event);
+}
+
 void HeadClickableListWidget::expandListWidgetOrNot()
 {
+    QPushButton *lb = findChild<QPushButton *>("arrButton");
+    if (!lb)
+        return;
+
+    lb->setProperty("expand", !bExpanded);
+    contentWidget->setVisible(!bExpanded);
+    bExpanded = !bExpanded;
+    lb->style()->unpolish(lb);
+    lb->style()->polish(lb);
+    lb->update();
+}
+
+void HeadClickableListWidget::onFinishAddSongList()
+{
+    QLineEdit *le = findChild<QLineEdit *>("addSongListLineEdit");
+    if (!le)
+        return;
+
+    contentWidget->itemWidget(contentWidget->item(1))->deleteLater();
+    delete contentWidget->takeItem(1);
+
+    if (le->text().trimmed() != "")
+        addOrInsertWidgetItem("songListLabel", le->text(), true, 1);
+    else
+        contentWidget->setFixedHeight(32*contentWidget->count());
 }
 
 void HeadClickableListWidget::addEditableWidget()
@@ -102,11 +142,26 @@ void HeadClickableListWidget::addEditableWidget()
         return;
     pb->setFocus();
 
+    if (!bExpanded)
+        expandListWidgetOrNot();
+
+    QWidget *w = new QWidget;
+    QHBoxLayout *layout = new QHBoxLayout(w);
+    layout->setSpacing(0);
+    layout->setContentsMargins(45, 0, 0, 0);
     QLineEdit *lineEdit = new QLineEdit();
+    lineEdit->installEventFilter(this);
+    connect(lineEdit, &QLineEdit::returnPressed, this, [=]()
+    {
+        lineEdit->clearFocus();
+    });
+    layout->addWidget(lineEdit);
+    layout->addStretch();
+    lineEdit->setPlaceholderText(tr("Song List Name"));
     lineEdit->setObjectName("addSongListLineEdit");
     QListWidgetItem *item = new QListWidgetItem();
     contentWidget->insertItem(1, item);
-    contentWidget->setItemWidget(item, lineEdit);
+    contentWidget->setItemWidget(item, w);
     contentWidget->setFixedHeight(32*contentWidget->count());
     lineEdit->setFocus();
 }

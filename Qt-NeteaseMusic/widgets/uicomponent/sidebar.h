@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class HeadClickableListWidget;
+
 class SideBar : public QWidget
 {
     Q_OBJECT
@@ -15,6 +17,11 @@ protected:
 signals:
 
 public slots:
+    void clearSelected();
+
+
+private:
+    HeadClickableListWidget *preSelectedWidget;
 };
 
 #endif // SIDEBAR_H

@@ -21,13 +21,21 @@ public:
 public:
     explicit HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent = 0);
     void addWidgetItem(QString objName, QString text);
+    void clearSelection();
+
+private:
+    void expandListWidgetOrNot();
+
+private slots:
+    void addEditableWidget();
 
 signals:
-    void contentItemHeightChanged(int height);
+    void listItemClicked();
 
 private:
     QListWidget *contentWidget;
     HoverableWidget *preHoverableWidget;
+    bool bExpanded;
 };
 
 #endif // HEADCLICKABLELISTWIDGET_H

@@ -202,6 +202,13 @@ QLabel[LabelType="sideListWidgetItemIcon"] {
     image: url(:/uiresource/svg/sidebar/artist-hover.svg);
 }
 
+#loveLabel {
+    image: url(:/uiresource/svg/sidebar/love-normal.svg);
+}
+#loveLabel[State="hover"] {
+    image: url(:/uiresource/svg/sidebar/love-hover.svg);
+}
+
 
 
 /*左边列表的qss*/

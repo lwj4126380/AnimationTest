@@ -48,5 +48,11 @@
         <file>uiresource/svg/sidebar/down-normal.svg</file>
         <file>uiresource/svg/sidebar/up-hover.svg</file>
         <file>uiresource/svg/sidebar/up-normal.svg</file>
+        <file>uiresource/svg/sidebar/love-hover.svg</file>
+        <file>uiresource/svg/sidebar/love-normal.svg</file>
+        <file>uiresource/svg/sidebar/song-hover.svg</file>
+        <file>uiresource/svg/sidebar/song-normal.svg</file>
+        <file>uiresource/svg/sidebar/next-hover.svg</file>
+        <file>uiresource/svg/sidebar/next-normal.svg</file>
     </qresource>
 </RCC>

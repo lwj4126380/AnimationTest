@@ -6,10 +6,12 @@
 #include <QDebug>
 #include <QTimer>
 #include <QPushButton>
+#include <QLineEdit>
 #include "hoverablewidget.h"
 
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , preHoverableWidget(Q_NULLPTR)
+  , bExpanded(true)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QVBoxLayout *layout = new QVBoxLayout;
@@ -31,6 +33,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
 
         if (type == ClickableWithAddBtn) {
             QPushButton *addLb = new QPushButton();
+            connect(addLb, &QPushButton::clicked, this, &HeadClickableListWidget::addEditableWidget);
             addLb->setCursor(Qt::PointingHandCursor);
             addLb->setObjectName("addSheetButton");
             addLb->setProperty("ButtonType", "sideWidgetHead");
@@ -63,6 +66,7 @@ void HeadClickableListWidget::addWidgetItem(QString objName, QString text)
     widget->setTyleTwo(text, objName);
     QListWidgetItem *item = new QListWidgetItem();
     connect(widget, &HoverableWidget::clicked, this, [&](){
+        emit listItemClicked();
         HoverableWidget *hw = (HoverableWidget *)sender();
         if (hw == preHoverableWidget)
             return;
@@ -76,5 +80,34 @@ void HeadClickableListWidget::addWidgetItem(QString objName, QString text)
     contentWidget->addItem(item);
     contentWidget->setItemWidget(item, widget);
     contentWidget->setFixedHeight(32*contentWidget->count());
+}
+
+void HeadClickableListWidget::clearSelection()
+{
+    contentWidget->clearSelection();
+    if (preHoverableWidget)
+        preHoverableWidget->setChecked(false);
+
+    preHoverableWidget = Q_NULLPTR;
+}
+
+void HeadClickableListWidget::expandListWidgetOrNot()
+{
+}
+
+void HeadClickableListWidget::addEditableWidget()
+{
+    QPushButton *pb = qobject_cast<QPushButton *> (sender());
+    if (!pb)
+        return;
+    pb->setFocus();
+
+    QLineEdit *lineEdit = new QLineEdit();
+    lineEdit->setObjectName("addSongListLineEdit");
+    QListWidgetItem *item = new QListWidgetItem();
+    contentWidget->insertItem(1, item);
+    contentWidget->setItemWidget(item, lineEdit);
+    contentWidget->setFixedHeight(32*contentWidget->count());
+    lineEdit->setFocus();
 }
 

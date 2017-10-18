@@ -22,6 +22,8 @@ MainWindow::MainWindow(QApplication *app, bool isMainWindow) :
     widget->setStyleSheet("background-color: white");
     sp->addWidget(widget);
     la->addWidget(sp);
+
+    centerPrimaryScreen();
 }
 
 MainWindow::MainWindow(QApplication *app, SleekWindow *parent) :

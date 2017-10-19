@@ -369,6 +369,7 @@ QPushButton[ButtonType="sideWidgetHead"] {
 #leftListWidget {
     background-color: #f5f5f7;
     border-style: solid;
+    outline: 0;
 }
 
 #leftListWidget::item {

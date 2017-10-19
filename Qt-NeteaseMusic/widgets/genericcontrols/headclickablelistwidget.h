@@ -14,11 +14,10 @@ class ContextMenuListWidget : public QListWidget {
 public:
     explicit ContextMenuListWidget(QWidget *parent = Q_NULLPTR);
 
-    QSize sizeHint() const;
-
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
+    void startDrag(Qt::DropActions supportedActions);
 };
 
 class HeadClickableListWidget : public QWidget

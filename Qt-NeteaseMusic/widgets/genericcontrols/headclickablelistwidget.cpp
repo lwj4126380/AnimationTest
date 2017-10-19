@@ -14,25 +14,23 @@
 #include <QApplication>
 #include "mainwindow.h"
 #include <QGraphicsDropShadowEffect>
+#include <QMimeData>
+#include <QDrag>
+#include <QPainter>
 extern MainWindow *mm;
 
+const int SongListNameId = Qt::UserRole + 1;
 
 ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
     QListWidget(parent)
 {
     setDragEnabled(true);
+    setDragDropMode(QAbstractItemView::InternalMove);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-}
-
-QSize ContextMenuListWidget::sizeHint() const {
-    if (model()->rowCount() == 0) return QSize(width(), 0);
-    return QSize(width(), model()->rowCount()*sizeHintForRow(0));
 }
 
 void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-
-    qDebug() << currentRow();
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
     shadow_effect->setOffset(0, 0);
     shadow_effect->setColor(Qt::gray);
@@ -45,7 +43,7 @@ void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
     w->setText("FFFFFFFFFF");
     w->setFocus();
     w->installEventFilter(this);
-    w->move(event->pos());
+    w->move(mapTo(mm, event->pos()));
     w->show();
 }
 
@@ -57,7 +55,51 @@ bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
     return QListWidget::eventFilter(watched, event);
 }
 
+void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
+{
+    Q_UNUSED(supportedActions);
+    QListWidgetItem *item = currentItem();
+    QList<QListWidgetItem*> tl;
+    tl.append(item);
+    if (item) {
+        QMimeData *data =mimeData(tl);
+        if (!data)
+            return;
+        QDrag *drag = new QDrag(this);
+        QString text = item->data(SongListNameId).toString();
+        QFontMetrics fm(qApp->font());
+        QSize ps = fm.boundingRect(text).size();
+        QPixmap pixmap(ps.width()+16, ps.height()+10);
+        pixmap.fill(Qt::transparent);
 
+        QPen pen(QColor(138, 138, 139));
+        QPainter p1(&pixmap);
+        p1.setPen(pen);
+        p1.setCompositionMode(QPainter::CompositionMode_Source);
+        p1.drawText(pixmap.rect(), Qt::AlignCenter, text);
+        p1.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        p1.fillRect(pixmap.rect(), QColor(252, 252, 253, 64));
+        p1.setPen(QPen(QColor(214, 214, 215)));
+        const qreal radius = 2;
+        QPainterPath path;
+        QRectF rect = QRect(0, 0, pixmap.width()-1, pixmap.height()-1);
+        path.moveTo(rect.topRight() - QPointF(radius, 0));
+        path.lineTo(rect.topLeft() + QPointF(radius, 0));
+        path.quadTo(rect.topLeft(), rect.topLeft() + QPointF(0, radius));
+        path.lineTo(rect.bottomLeft() + QPointF(0, -radius));
+        path.quadTo(rect.bottomLeft(), rect.bottomLeft() + QPointF(radius, 0));
+        path.lineTo(rect.bottomRight() - QPointF(radius, 0));
+        path.quadTo(rect.bottomRight(), rect.bottomRight() + QPointF(0, -radius));
+        path.lineTo(rect.topRight() + QPointF(0, radius));
+        path.quadTo(rect.topRight(), rect.topRight() + QPointF(-radius, -0));
+        p1.drawPath(path);
+        p1.end();
+
+        drag->setPixmap(pixmap);
+        drag->setMimeData(data);
+        drag->exec(supportedActions);
+    }
+}
 
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , preHoverableWidget(Q_NULLPTR)
@@ -106,6 +148,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
     contentWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");
+    contentWidget->setFixedHeight(0);
     contentWidget->setFrameStyle(QFrame::NoFrame);
     layout->addWidget(contentWidget);
     setLayout(layout);
@@ -116,6 +159,7 @@ void HeadClickableListWidget::addOrInsertWidgetItem(QString objName, QString tex
     HoverableWidget *widget = new HoverableWidget();
     widget->setTyleTwo(text, objName);
     QListWidgetItem *item = new QListWidgetItem();
+    item->setData(SongListNameId, text);
     connect(widget, &HoverableWidget::clicked, this, [&](){
         emit listItemClicked();
         HoverableWidget *hw = (HoverableWidget *)sender();
@@ -133,6 +177,7 @@ void HeadClickableListWidget::addOrInsertWidgetItem(QString objName, QString tex
     else
         contentWidget->insertItem(index, item);
     contentWidget->setItemWidget(item, widget);
+    contentWidget->setFixedHeight(contentWidget->count() * 32);
 }
 
 void HeadClickableListWidget::clearSelection()
@@ -215,6 +260,6 @@ void HeadClickableListWidget::addEditableWidget()
     QListWidgetItem *item = new QListWidgetItem();
     contentWidget->insertItem(1, item);
     contentWidget->setItemWidget(item, w);
-    contentWidget->viewport()->adjustSize();
+    contentWidget->setFixedHeight(contentWidget->count() * 32);
     lineEdit->setFocus();
 }

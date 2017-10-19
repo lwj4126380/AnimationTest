@@ -54,5 +54,6 @@
         <file>uiresource/svg/sidebar/song-normal.svg</file>
         <file>uiresource/svg/sidebar/next-hover.svg</file>
         <file>uiresource/svg/sidebar/next-normal.svg</file>
+        <file>zhCN.qm</file>
     </qresource>
 </RCC>

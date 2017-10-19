@@ -3,10 +3,19 @@
 
 #include <QWidget>
 #include <QListWidget>
+#include <QProxyStyle>
 
 class QListWidget;
 class QListWidgetItem;
 class HoverableWidget;
+
+class myViewStyle: public QProxyStyle{
+public:
+    myViewStyle(QStyle* style = 0);
+
+    void drawPrimitive ( PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0 ) const;
+};
+
 
 class ContextMenuListWidget : public QListWidget {
     Q_OBJECT
@@ -18,6 +27,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
     void startDrag(Qt::DropActions supportedActions);
+//    void dragMoveEvent(QDragMoveEvent *event);
 };
 
 class HeadClickableListWidget : public QWidget

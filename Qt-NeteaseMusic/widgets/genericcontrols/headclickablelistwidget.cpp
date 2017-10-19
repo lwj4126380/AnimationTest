@@ -21,9 +21,31 @@ extern MainWindow *mm;
 
 const int SongListNameId = Qt::UserRole + 1;
 
+myViewStyle::myViewStyle(QStyle* style)
+     :QProxyStyle(style)
+{}
+
+void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const{
+    if (element == QStyle::PE_IndicatorItemViewItemDrop && !option->rect.isNull()){
+        QStyleOption opt(*option);
+        if (opt.rect.y() == 0)
+            opt.rect.setY(opt.rect.y()+1);
+        else
+            opt.rect.setY(opt.rect.y()-1);
+        opt.rect.setHeight(2);
+        opt.rect.setBottom(opt.rect.bottom()-1);
+        painter->setPen(QColor(198, 47, 47));
+        if (widget) opt.rect.setRight(widget->width());
+        QProxyStyle::drawPrimitive(element, &opt, painter, widget);
+        return;
+    }
+    QProxyStyle::drawPrimitive(element, option, painter, widget);
+}
+
 ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
     QListWidget(parent)
 {
+    setStyle(new myViewStyle(style()));
     setDragEnabled(true);
     setDragDropMode(QAbstractItemView::InternalMove);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -100,6 +122,18 @@ void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
         drag->exec(supportedActions);
     }
 }
+
+//void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
+//{
+//    QListWidgetItem *item = itemAt(event->pos());
+//    if (!item || item == currentItem())
+//        event->ignore();
+//    else {
+//        QWidget *w = itemWidget(item);
+//        w->setStyleSheet("#discoverLabel {border-style:solid; border-top-width: 2px; border-top-color: green;}");
+//        event->accept();
+//    }
+//}
 
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , preHoverableWidget(Q_NULLPTR)
@@ -228,6 +262,8 @@ void HeadClickableListWidget::onFinishAddSongList()
 
     if (le->text().trimmed() != "")
         addOrInsertWidgetItem("songListLabel", le->text(), true, 1);
+    else
+        contentWidget->setFixedHeight(contentWidget->count() * 32);
 }
 
 void HeadClickableListWidget::addEditableWidget()

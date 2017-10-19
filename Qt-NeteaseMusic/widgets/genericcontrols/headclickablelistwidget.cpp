@@ -15,34 +15,28 @@
 #include "mainwindow.h"
 #include <QGraphicsDropShadowEffect>
 extern MainWindow *mm;
+
+
 ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
     QListWidget(parent)
 {
-//    setContextMenuPolicy(Qt::CustomContextMenu);
-//    connect(this, &ContextMenuListWidget::customContextMenuRequested, this, [&](const QPoint &pos){
-//        qDebug() << "BBBBBBBBBBBB";
-//        QMenu *menu = new QMenu(this);
-//        menu->setObjectName("menu");
-//        QAction *action = new QAction(this);
-//        action->setText(QString::fromLocal8Bit("保存"));
-//        menu->addAction(action);
-//        menu->addSeparator();//增加分隔行
-//        menu->exec(pos);
-//    });
+    setDragEnabled(true);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+}
+
+QSize ContextMenuListWidget::sizeHint() const {
+    if (model()->rowCount() == 0) return QSize(width(), 0);
+    return QSize(width(), model()->rowCount()*sizeHintForRow(0));
 }
 
 void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-    qDebug() << "AAAAAAA";
 
+    qDebug() << currentRow();
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
-
     shadow_effect->setOffset(0, 0);
-
     shadow_effect->setColor(Qt::gray);
-
     shadow_effect->setBlurRadius(8);
-
 
     QLabel *w = new QLabel(mm);
     w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
@@ -54,7 +48,7 @@ void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
     w->move(event->pos());
     w->show();
 }
-int i=0;
+
 bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched->objectName() == "ddd" && event->type() == QEvent::FocusOut) {
@@ -113,8 +107,6 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
     contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");
     contentWidget->setFrameStyle(QFrame::NoFrame);
-    contentWidget->setFocusPolicy(Qt::NoFocus);
-    contentWidget->setFixedHeight(0);
     layout->addWidget(contentWidget);
     setLayout(layout);
 }
@@ -141,7 +133,6 @@ void HeadClickableListWidget::addOrInsertWidgetItem(QString objName, QString tex
     else
         contentWidget->insertItem(index, item);
     contentWidget->setItemWidget(item, widget);
-    contentWidget->setFixedHeight(32*contentWidget->count());
 }
 
 void HeadClickableListWidget::clearSelection()
@@ -155,21 +146,17 @@ void HeadClickableListWidget::clearSelection()
 
 bool HeadClickableListWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched->objectName() == "addSongListLineEdit" && event->type() == QEvent::FocusOut)
+    if (watched->objectName() == "addSongListLineEdit" && event->type() == QEvent::FocusOut) {
         onFinishAddSongList();
+    }
+
+    if (watched->objectName() == "addSongListWidget") {
+        if (QEvent::MouseButtonPress == event->type())
+            return true;
+    }
 
     return QWidget::eventFilter(watched, event);
 }
-
-//void HeadClickableListWidget::contextMenuEvent(QContextMenuEvent *event)
-//{
-//    QMenu *menu = new QMenu(this);
-//    QAction *action = new QAction(this);
-//    action->setText(QString::fromLocal8Bit("保存"));
-//    menu->addAction(action);
-//    menu->addSeparator();//增加分隔行
-//    menu->exec(QCursor::pos());
-//}
 
 void HeadClickableListWidget::expandListWidgetOrNot()
 {
@@ -196,8 +183,6 @@ void HeadClickableListWidget::onFinishAddSongList()
 
     if (le->text().trimmed() != "")
         addOrInsertWidgetItem("songListLabel", le->text(), true, 1);
-    else
-        contentWidget->setFixedHeight(32*contentWidget->count());
 }
 
 void HeadClickableListWidget::addEditableWidget()
@@ -211,6 +196,8 @@ void HeadClickableListWidget::addEditableWidget()
         expandListWidgetOrNot();
 
     QWidget *w = new QWidget;
+    w->setObjectName("addSongListWidget");
+    w->installEventFilter(this);
     QHBoxLayout *layout = new QHBoxLayout(w);
     layout->setSpacing(0);
     layout->setContentsMargins(45, 0, 0, 0);
@@ -224,10 +211,10 @@ void HeadClickableListWidget::addEditableWidget()
     layout->addStretch();
     lineEdit->setPlaceholderText(tr("Song List Name"));
     lineEdit->setObjectName("addSongListLineEdit");
+    lineEdit->setContextMenuPolicy(Qt::PreventContextMenu);
     QListWidgetItem *item = new QListWidgetItem();
     contentWidget->insertItem(1, item);
     contentWidget->setItemWidget(item, w);
-    contentWidget->setFixedHeight(32*contentWidget->count());
+    contentWidget->viewport()->adjustSize();
     lineEdit->setFocus();
 }
-

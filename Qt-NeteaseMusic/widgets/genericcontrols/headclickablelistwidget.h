@@ -14,6 +14,8 @@ class ContextMenuListWidget : public QListWidget {
 public:
     explicit ContextMenuListWidget(QWidget *parent = Q_NULLPTR);
 
+    QSize sizeHint() const;
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
@@ -37,7 +39,6 @@ public:
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event);
-//    void contextMenuEvent(QContextMenuEvent *event);
 
 private:
     void expandListWidgetOrNot();

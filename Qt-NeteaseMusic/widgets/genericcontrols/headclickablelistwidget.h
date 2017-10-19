@@ -17,6 +17,7 @@ public:
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
+    void startDrag(Qt::DropActions supportedActions);
 };
 
 class HeadClickableListWidget : public QWidget
@@ -37,7 +38,6 @@ public:
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event);
-//    void contextMenuEvent(QContextMenuEvent *event);
 
 private:
     void expandListWidgetOrNot();

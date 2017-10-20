@@ -43,12 +43,17 @@ void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption *
 }
 
 ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
-    QListWidget(parent)
+    QListWidget(parent),
+    isMouseMoved(false),
+    startDragItem(Q_NULLPTR)
 {
     setStyle(new myViewStyle(style()));
+    setFocusPolicy(Qt::NoFocus);
     setDragEnabled(true);
+    setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::InternalMove);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    setSelectionMode(QAbstractItemView::NoSelection);
 }
 
 void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -79,8 +84,9 @@ bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
 
 void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
 {
+    qDebug() << "AAAAAAAA";
     Q_UNUSED(supportedActions);
-    QListWidgetItem *item = currentItem();
+    QListWidgetItem *item = startDragItem;
     QList<QListWidgetItem*> tl;
     tl.append(item);
     if (item) {
@@ -123,17 +129,64 @@ void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
     }
 }
 
-//void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
-//{
-//    QListWidgetItem *item = itemAt(event->pos());
-//    if (!item || item == currentItem())
-//        event->ignore();
-//    else {
-//        QWidget *w = itemWidget(item);
-//        w->setStyleSheet("#discoverLabel {border-style:solid; border-top-width: 2px; border-top-color: green;}");
-//        event->accept();
-//    }
-//}
+void ContextMenuListWidget::mousePressEvent(QMouseEvent *event)
+{
+    qDebug() << "1111111111111";
+    isLeftButtonClicked = event->button() == Qt::LeftButton;
+    startPos = event->pos();
+    startDragItem = itemAt(startPos);
+    isMouseMoved = false;
+}
+
+void ContextMenuListWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    qDebug() << "22222222222";
+    if (!isMouseMoved) {
+        setSelectionMode(QAbstractItemView::SingleSelection);
+        itemAt(event->pos())->setSelected(true);
+    }
+}
+
+void ContextMenuListWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    qDebug() << "33333333333" << event->button();
+    if (!isLeftButtonClicked)
+        goto end;
+    isMouseMoved = true;
+    setState(QAbstractItemView::DraggingState);
+end:
+    QListWidget::mouseMoveEvent(event);
+}
+
+void ContextMenuListWidget::dropEvent(QDropEvent *event)
+{
+    qDebug() << "444444444" << event->dropAction();
+    QListWidgetItem *endItem = itemAt(event->pos());
+    int endIndex = row(endItem);
+    if (event->pos().y() >= (row(endItem)+1) * 32-16)
+        qDebug() << "xiamian";
+    else
+        qDebug() << "shangmian";
+
+//    qDebug() << event->pos() << (row(endItem)+1) * 32;
+////this->takeItem(row(startDragItem));
+//    qDebug() << row(endItem);
+
+
+}
+
+void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
+{
+
+    QListWidgetItem *item = itemAt(event->pos());
+    if (item == startDragItem) {
+        event->ignore();
+    } else {
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+        QListWidget::dragMoveEvent(event);
+    }
+}
 
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , preHoverableWidget(Q_NULLPTR)
@@ -179,7 +232,6 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
     }
 
     contentWidget = new ContextMenuListWidget();
-    contentWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");
     contentWidget->setFixedHeight(0);

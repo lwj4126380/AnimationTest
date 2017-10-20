@@ -79,11 +79,11 @@ void HoverableWidget::leaveEvent(QEvent *event)
 
 void HoverableWidget::mousePressEvent(QMouseEvent *event)
 {
-    setChecked(true);
+//    setChecked(true);
 
-    setFocus();
-    emit clicked();
-    if (bCheckedable)
+//    setFocus();
+//    emit clicked();
+//    if (bCheckedable)
         QWidget::mousePressEvent(event);
 }
 

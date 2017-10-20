@@ -27,6 +27,18 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
     void startDrag(Qt::DropActions supportedActions);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void dropEvent(QDropEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+//    void dragEnterEvent(QDragEnterEvent *event);
+
+private:
+    bool isMouseMoved;
+    QPoint startPos;
+    bool isLeftButtonClicked;
+    QListWidgetItem *startDragItem;
 //    void dragMoveEvent(QDragMoveEvent *event);
 };
 

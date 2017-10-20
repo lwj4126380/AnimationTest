@@ -160,30 +160,27 @@ end:
 
 void ContextMenuListWidget::dropEvent(QDropEvent *event)
 {
-    qDebug() << "444444444" << event->dropAction();
     QListWidgetItem *endItem = itemAt(event->pos());
     int endIndex = row(endItem);
+    int targetIndex = -1;
     if (event->pos().y() >= (row(endItem)+1) * 32-16)
-        qDebug() << "xiamian";
+        targetIndex = endIndex + 1;
     else
-        qDebug() << "shangmian";
+        targetIndex = endIndex;
 
-//    qDebug() << event->pos() << (row(endItem)+1) * 32;
-////this->takeItem(row(startDragItem));
-//    qDebug() << row(endItem);
-
-
+    QListWidgetItem *il = new QListWidgetItem(*startDragItem);
+    insertItem(targetIndex, il);
+    setItemWidget(il, itemWidget(startDragItem));
+    il->setSelected(startDragItem->isSelected());
+    delete takeItem(row(startDragItem));
 }
 
 void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
-
     QListWidgetItem *item = itemAt(event->pos());
     if (item == startDragItem) {
         event->ignore();
     } else {
-        event->setDropAction(Qt::MoveAction);
-        event->accept();
         QListWidget::dragMoveEvent(event);
     }
 }

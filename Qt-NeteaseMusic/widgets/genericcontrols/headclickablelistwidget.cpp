@@ -85,6 +85,7 @@ bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
 void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
 {
     qDebug() << "AAAAAAAA";
+    setSelectionMode(QAbstractItemView::SingleSelection);
     Q_UNUSED(supportedActions);
     QListWidgetItem *item = startDragItem;
     QList<QListWidgetItem*> tl;
@@ -144,6 +145,7 @@ void ContextMenuListWidget::mouseReleaseEvent(QMouseEvent *event)
     if (!isMouseMoved) {
         setSelectionMode(QAbstractItemView::SingleSelection);
         itemAt(event->pos())->setSelected(true);
+        setSelectionMode(QAbstractItemView::NoSelection);
     }
 }
 
@@ -173,8 +175,13 @@ void ContextMenuListWidget::dropEvent(QDropEvent *event)
     QListWidgetItem *il = new QListWidgetItem(*startDragItem);
     insertItem(targetIndex, il);
     setItemWidget(il, itemWidget(startDragItem));
-    il->setSelected(startDragItem->isSelected());
+//    il->setSelected(startDragItem->isSelected());
+    blockSignals(true);
+    setCurrentRow(targetIndex);
+    blockSignals(false);
+    qDebug() << "FFFFFFFF" << row(il);
     delete takeItem(row(startDragItem));
+    setSelectionMode(QAbstractItemView::NoSelection);
 }
 
 void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)

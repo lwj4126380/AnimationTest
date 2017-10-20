@@ -257,6 +257,7 @@ void SleekWindow::slot_closing()
 
 void SleekWindow::close(bool quit)
 {
+    Q_UNUSED(quit)
     emit closing();
     _closed = true;
     _eventLoop.exit();

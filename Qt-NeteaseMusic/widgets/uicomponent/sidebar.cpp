@@ -26,7 +26,7 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent),
     wLayout->setMargin(0);
     wLayout->setSpacing(10);
 
-    HeadClickableListWidget *recommend = new HeadClickableListWidget(HeadClickableListWidget::NotClickable, tr("Recommand"), QVariant());
+    HeadClickableListWidget *recommend = new HeadClickableListWidget(ContextMenuListWidget::NotDragable, HeadClickableListWidget::NotClickable, tr("Recommand"), QVariant());
     connect(recommend, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
     recommend->addOrInsertWidgetItem("discoverLabel", tr("Discover Music"));
     recommend->addOrInsertWidgetItem("fmLabel", tr("Personal FM"));
@@ -34,7 +34,7 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent),
     recommend->addOrInsertWidgetItem("friendLabel", tr("Friend"));
     wLayout->addWidget(recommend);
 
-    HeadClickableListWidget *myMusic = new HeadClickableListWidget(HeadClickableListWidget::NotClickable, tr("My Music"), QVariant());
+    HeadClickableListWidget *myMusic = new HeadClickableListWidget(ContextMenuListWidget::NotDragable, HeadClickableListWidget::NotClickable, tr("My Music"), QVariant());
     connect(myMusic, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
     myMusic->addOrInsertWidgetItem("localLabel", tr("Local Music"));
     myMusic->addOrInsertWidgetItem("dldLabel", tr("Download Manager"));
@@ -42,12 +42,12 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent),
     myMusic->addOrInsertWidgetItem("artistLabel", tr("My Artist"));
     wLayout->addWidget(myMusic);
 
-    HeadClickableListWidget *createdPlayList = new HeadClickableListWidget(HeadClickableListWidget::ClickableWithAddBtn, tr("Created Play List"), QVariant());
+    HeadClickableListWidget *createdPlayList = new HeadClickableListWidget(ContextMenuListWidget::CannotDragFirstItem, HeadClickableListWidget::ClickableWithAddBtn, tr("Created Play List"), QVariant());
     connect(createdPlayList, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
     createdPlayList->addOrInsertWidgetItem("loveLabel", tr("My Love Music"));
     wLayout->addWidget(createdPlayList);
 
-    HeadClickableListWidget *playListCollection = new HeadClickableListWidget(HeadClickableListWidget::Clickable, tr("Stored Play List"), QVariant());
+    HeadClickableListWidget *playListCollection = new HeadClickableListWidget(ContextMenuListWidget::NoLimitation, HeadClickableListWidget::Clickable, tr("Stored Play List"), QVariant());
     connect(playListCollection, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);
     wLayout->addWidget(playListCollection);
 

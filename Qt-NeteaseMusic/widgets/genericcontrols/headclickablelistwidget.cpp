@@ -42,17 +42,20 @@ void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption *
     QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
+ContextMenuListWidget::ContextMenuListWidget(DragType type, QWidget *parent) :
     QListWidget(parent),
     isMouseMoved(false),
     preHoverableWidget(Q_NULLPTR),
-    startDragItem(Q_NULLPTR)
+    startDragItem(Q_NULLPTR),
+    dragType(type)
 {
     setStyle(new myViewStyle(style()));
     setFocusPolicy(Qt::NoFocus);
-    setDragEnabled(true);
-    setDropIndicatorShown(true);
-    setDragDropMode(QAbstractItemView::InternalMove);
+    if (type != DragType::NotDragable) {
+        setDragEnabled(true);
+        setDropIndicatorShown(true);
+        setDragDropMode(QAbstractItemView::InternalMove);
+    }
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     setSelectionMode(QAbstractItemView::NoSelection);
 }
@@ -75,15 +78,23 @@ void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
     shadow_effect->setColor(Qt::gray);
     shadow_effect->setBlurRadius(8);
 
-    QLabel *w = new QLabel(mm);
-    w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
-    w->setObjectName("ddd");
-    w->setGraphicsEffect(shadow_effect);
-    w->setText("FFFFFFFFFF");
-    w->setFocus();
-    w->installEventFilter(this);
-    w->move(mapTo(mm, event->pos()));
-    w->show();
+//    QLabel *w = new QLabel(mm);
+//    w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
+//    w->setObjectName("ddd");
+//    w->setGraphicsEffect(shadow_effect);
+//    w->setText("FFFFFFFFFF");
+//    w->setFocus();
+//    w->installEventFilter(this);
+//    w->move(mapTo(mm, event->pos()));
+//    w->show();
+
+    QMenu *m_pPreMenu=new QMenu(this);
+    m_pPreMenu->addAction("4");
+    m_pPreMenu->addAction("3");
+    m_pPreMenu->addAction("2");
+    m_pPreMenu->addAction("1");
+//    m_pPreMenu->move(event->globalPos());
+    m_pPreMenu->exec(event->globalPos());
 }
 
 bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
@@ -165,9 +176,12 @@ void ContextMenuListWidget::mouseMoveEvent(QMouseEvent *event)
     QPoint dis = event->pos()-startPos;
     if (!isLeftButtonClicked)
         goto end;
+
     if (dis.manhattanLength() > 10) {
         isMouseMoved = true;
-        setState(QAbstractItemView::DraggingState);
+        if (dragType == DragType::NoLimitation || (dragType == DragType::CannotDragFirstItem && row(startDragItem) != 0)) {
+            setState(QAbstractItemView::DraggingState);
+        }
     }
 end:
     QListWidget::mouseMoveEvent(event);
@@ -210,7 +224,7 @@ void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
     QListWidgetItem *item = itemAt(event->pos());
     bool b = item->isSelected();
-    if (item == startDragItem) {
+    if (item == startDragItem || (dragType==DragType::CannotDragFirstItem && row(item)==0)) {
         event->ignore();
     } else {
         setSelectionMode(QAbstractItemView::SingleSelection);
@@ -233,7 +247,7 @@ void ContextMenuListWidget::setItemWidgetStatus(HoverableWidget *widget)
     preHoverableWidget = widget;
 }
 
-HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
+HeadClickableListWidget::HeadClickableListWidget(ContextMenuListWidget::DragType dtype, ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
   , bExpanded(true)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -275,7 +289,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
         layout->addLayout(hb);
     }
 
-    contentWidget = new ContextMenuListWidget();
+    contentWidget = new ContextMenuListWidget(dtype);
     connect(contentWidget, &ContextMenuListWidget::userSelectItem, this, &HeadClickableListWidget::listItemClicked);
     contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");

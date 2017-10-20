@@ -38,5 +38,5 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     resource.qrc
-
 TRANSLATIONS += zhCN.ts
+RC_FILE=icon.rc

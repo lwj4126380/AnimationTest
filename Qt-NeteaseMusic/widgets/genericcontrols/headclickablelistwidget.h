@@ -21,7 +21,14 @@ class ContextMenuListWidget : public QListWidget {
     Q_OBJECT
 
 public:
-    explicit ContextMenuListWidget(QWidget *parent = Q_NULLPTR);
+    enum DragType {
+        NotDragable,
+        CannotDragFirstItem,
+        NoLimitation,
+    };
+
+public:
+    explicit ContextMenuListWidget(DragType type, QWidget *parent = Q_NULLPTR);
     void clearCheckedStatus();
 
 protected:
@@ -44,6 +51,7 @@ private:
     bool isLeftButtonClicked;
     QListWidgetItem *startDragItem;
     HoverableWidget *preHoverableWidget;
+    DragType  dragType;
 
 signals:
     void userSelectItem();
@@ -61,7 +69,7 @@ public:
     };
 
 public:
-    explicit HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent = 0);
+    explicit HeadClickableListWidget(ContextMenuListWidget::DragType dtype, ClickableWidgetType type, QString text, QVariant icons, QWidget *parent = 0);
     void addOrInsertWidgetItem(QString objName, QString text, bool bInsert=false, int index=-1);
     void clearSelection();
 

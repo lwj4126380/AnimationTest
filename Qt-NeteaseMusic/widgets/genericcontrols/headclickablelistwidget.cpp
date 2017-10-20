@@ -45,6 +45,7 @@ void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption *
 ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
     QListWidget(parent),
     isMouseMoved(false),
+    preHoverableWidget(Q_NULLPTR),
     startDragItem(Q_NULLPTR)
 {
     setStyle(new myViewStyle(style()));
@@ -56,8 +57,19 @@ ContextMenuListWidget::ContextMenuListWidget(QWidget *parent) :
     setSelectionMode(QAbstractItemView::NoSelection);
 }
 
+void ContextMenuListWidget::clearCheckedStatus()
+{
+    clearSelection();
+    if (preHoverableWidget)
+        preHoverableWidget->setChecked(false);
+
+    preHoverableWidget = Q_NULLPTR;
+}
+
 void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
 {
+    setSelectionMode(QAbstractItemView::MultiSelection);
+//itemAt(event->pos())->setSelected(true);
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
     shadow_effect->setOffset(0, 0);
     shadow_effect->setColor(Qt::gray);
@@ -138,9 +150,12 @@ void ContextMenuListWidget::mousePressEvent(QMouseEvent *event)
 
 void ContextMenuListWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (!isMouseMoved) {
+    if (!isMouseMoved && isLeftButtonClicked) {
         setSelectionMode(QAbstractItemView::SingleSelection);
-        itemAt(event->pos())->setSelected(true);
+        QListWidgetItem * item1 = itemAt(event->pos());
+        item1->setSelected(true);
+        emit userSelectItem();
+        setItemWidgetStatus((HoverableWidget *)itemWidget(item1));
         setSelectionMode(QAbstractItemView::NoSelection);
     }
 }
@@ -151,7 +166,7 @@ void ContextMenuListWidget::mouseMoveEvent(QMouseEvent *event)
     if (!isLeftButtonClicked)
         goto end;
     isMouseMoved = true;
-    if (dis.manhattanLength() > 5)
+    if (dis.manhattanLength() > 10)
         setState(QAbstractItemView::DraggingState);
 end:
     QListWidget::mouseMoveEvent(event);
@@ -168,15 +183,23 @@ void ContextMenuListWidget::dropEvent(QDropEvent *event)
     else
         targetIndex = endIndex;
 
+    bool bStartLessThanTarget = false;
+    if (row(startDragItem) < targetIndex)
+        bStartLessThanTarget = true;
+
     QListWidgetItem *il = new QListWidgetItem(*startDragItem);
     insertItem(targetIndex, il);
     setItemWidget(il, itemWidget(startDragItem));
     delete takeItem(row(startDragItem));
 
     if (b) {
-        QTimer::singleShot(50, [&, targetIndex](){
+        QTimer::singleShot(50, [&, targetIndex, bStartLessThanTarget](){
             setSelectionMode(QAbstractItemView::SingleSelection);
-            setCurrentRow(targetIndex);
+            if (bStartLessThanTarget)
+                setCurrentRow(targetIndex-1);
+            else
+                setCurrentRow(targetIndex);
+
             setSelectionMode(QAbstractItemView::NoSelection);
         });
     }
@@ -197,8 +220,19 @@ void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
     }
 }
 
+void ContextMenuListWidget::setItemWidgetStatus(HoverableWidget *widget)
+{
+    if (!widget || widget == preHoverableWidget)
+        return;
+
+    widget->setChecked(true);
+    if (preHoverableWidget != Q_NULLPTR)
+        preHoverableWidget->setChecked(false);
+
+    preHoverableWidget = widget;
+}
+
 HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QString text, QVariant icons, QWidget *parent) : QWidget(parent)
-  , preHoverableWidget(Q_NULLPTR)
   , bExpanded(true)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -241,6 +275,7 @@ HeadClickableListWidget::HeadClickableListWidget(ClickableWidgetType type, QStri
     }
 
     contentWidget = new ContextMenuListWidget();
+    connect(contentWidget, &ContextMenuListWidget::userSelectItem, this, &HeadClickableListWidget::listItemClicked);
     contentWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     contentWidget->setObjectName("leftListWidget");
     contentWidget->setFixedHeight(0);
@@ -255,17 +290,6 @@ void HeadClickableListWidget::addOrInsertWidgetItem(QString objName, QString tex
     widget->setTyleTwo(text, objName);
     QListWidgetItem *item = new QListWidgetItem();
     item->setData(SongListNameId, text);
-    connect(widget, &HoverableWidget::clicked, this, [&](){
-        emit listItemClicked();
-        HoverableWidget *hw = (HoverableWidget *)sender();
-        if (hw == preHoverableWidget)
-            return;
-
-        if (preHoverableWidget != Q_NULLPTR)
-            preHoverableWidget->setChecked(false);
-
-        preHoverableWidget = hw;
-    });
 
     if (!bInsert)
         contentWidget->addItem(item);
@@ -277,11 +301,7 @@ void HeadClickableListWidget::addOrInsertWidgetItem(QString objName, QString tex
 
 void HeadClickableListWidget::clearSelection()
 {
-    contentWidget->clearSelection();
-    if (preHoverableWidget)
-        preHoverableWidget->setChecked(false);
-
-    preHoverableWidget = Q_NULLPTR;
+    contentWidget->clearCheckedStatus();
 }
 
 bool HeadClickableListWidget::eventFilter(QObject *watched, QEvent *event)

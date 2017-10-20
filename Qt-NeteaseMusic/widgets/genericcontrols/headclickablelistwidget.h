@@ -22,6 +22,7 @@ class ContextMenuListWidget : public QListWidget {
 
 public:
     explicit ContextMenuListWidget(QWidget *parent = Q_NULLPTR);
+    void clearCheckedStatus();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
@@ -35,11 +36,17 @@ protected:
 //    void dragEnterEvent(QDragEnterEvent *event);
 
 private:
+    void setItemWidgetStatus(HoverableWidget *widget);
+
+private:
     bool isMouseMoved;
     QPoint startPos;
     bool isLeftButtonClicked;
     QListWidgetItem *startDragItem;
-//    void dragMoveEvent(QDragMoveEvent *event);
+    HoverableWidget *preHoverableWidget;
+
+signals:
+    void userSelectItem();
 };
 
 class HeadClickableListWidget : public QWidget
@@ -73,7 +80,6 @@ signals:
 
 private:
     ContextMenuListWidget *contentWidget;
-    HoverableWidget *preHoverableWidget;
     bool bExpanded;
 };
 

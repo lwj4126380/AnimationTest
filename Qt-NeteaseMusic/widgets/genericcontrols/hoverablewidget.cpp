@@ -58,6 +58,9 @@ void HoverableWidget::setChecked(bool b)
         changeHoverStyle(b);
         bChecked = b;
     }
+
+    if (bChecked)
+        setFocus();
 }
 
 void HoverableWidget::enterEvent(QEvent *event)
@@ -77,15 +80,15 @@ void HoverableWidget::leaveEvent(QEvent *event)
     QWidget::leaveEvent(event);
 }
 
-void HoverableWidget::mousePressEvent(QMouseEvent *event)
-{
+//void HoverableWidget::mousePressEvent(QMouseEvent *event)
+//{
 //    setChecked(true);
 
 //    setFocus();
 //    emit clicked();
 //    if (bCheckedable)
-        QWidget::mousePressEvent(event);
-}
+//        QWidget::mousePressEvent(event);
+//}
 
 void HoverableWidget::changeHoverStyle(bool bHover)
 {

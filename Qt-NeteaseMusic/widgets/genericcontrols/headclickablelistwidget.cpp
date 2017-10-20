@@ -29,7 +29,7 @@ void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption *
     if (element == QStyle::PE_IndicatorItemViewItemDrop && !option->rect.isNull()){
         QStyleOption opt(*option);
         if (opt.rect.y() == 0)
-            opt.rect.setY(opt.rect.y()+1);
+            opt.rect.setY(opt.rect.y());
         else
             opt.rect.setY(opt.rect.y()-1);
         opt.rect.setHeight(2);
@@ -153,7 +153,9 @@ void ContextMenuListWidget::mouseMoveEvent(QMouseEvent *event)
     if (!isLeftButtonClicked)
         goto end;
     isMouseMoved = true;
-    setState(QAbstractItemView::DraggingState);
+    QPoint dis = event->pos()-startPos;
+    if (dis.manhattanLength() > 5)
+        setState(QAbstractItemView::DraggingState);
 end:
     QListWidget::mouseMoveEvent(event);
 }
@@ -178,10 +180,13 @@ void ContextMenuListWidget::dropEvent(QDropEvent *event)
 void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
     QListWidgetItem *item = itemAt(event->pos());
+    bool b = item->isSelected();
     if (item == startDragItem) {
         event->ignore();
     } else {
+        item->setSelected(false);
         QListWidget::dragMoveEvent(event);
+        item->setSelected(b);
     }
 }
 

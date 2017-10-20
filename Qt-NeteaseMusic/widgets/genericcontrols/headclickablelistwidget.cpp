@@ -85,7 +85,6 @@ bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
 void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
 {
     qDebug() << "AAAAAAAA";
-    setSelectionMode(QAbstractItemView::SingleSelection);
     Q_UNUSED(supportedActions);
     QListWidgetItem *item = startDragItem;
     QList<QListWidgetItem*> tl;
@@ -164,6 +163,7 @@ end:
 
 void ContextMenuListWidget::dropEvent(QDropEvent *event)
 {
+    bool b = startDragItem->isSelected();
     QListWidgetItem *endItem = itemAt(event->pos());
     int endIndex = row(endItem);
     int targetIndex = -1;
@@ -175,13 +175,16 @@ void ContextMenuListWidget::dropEvent(QDropEvent *event)
     QListWidgetItem *il = new QListWidgetItem(*startDragItem);
     insertItem(targetIndex, il);
     setItemWidget(il, itemWidget(startDragItem));
-//    il->setSelected(startDragItem->isSelected());
-    blockSignals(true);
-    setCurrentRow(targetIndex);
-    blockSignals(false);
-    qDebug() << "FFFFFFFF" << row(il);
     delete takeItem(row(startDragItem));
-    setSelectionMode(QAbstractItemView::NoSelection);
+
+    if (b) {
+        QTimer::singleShot(50, [&, targetIndex](){
+            qDebug() << "ddddd  " << targetIndex;
+            setSelectionMode(QAbstractItemView::SingleSelection);
+            setCurrentRow(targetIndex);
+            setSelectionMode(QAbstractItemView::NoSelection);
+        });
+    }
 }
 
 void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
@@ -191,9 +194,11 @@ void ContextMenuListWidget::dragMoveEvent(QDragMoveEvent *event)
     if (item == startDragItem) {
         event->ignore();
     } else {
+        setSelectionMode(QAbstractItemView::SingleSelection);
         item->setSelected(false);
         QListWidget::dragMoveEvent(event);
         item->setSelected(b);
+        setSelectionMode(QAbstractItemView::NoSelection);
     }
 }
 

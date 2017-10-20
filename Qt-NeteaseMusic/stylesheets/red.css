@@ -7,6 +7,68 @@ QPushButton {
     border-style: solid;
 }
 
+QMenu {
+    background-color: #FAFAFC;
+    border: 1px solid #c4c4c6;
+    border-radius: 1px;
+}
+QMenu::item {
+    height: 35px;
+    padding-left: 44px;
+    padding-right: 44px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+QMenu::item:enabled {
+    color: #010101;
+}
+QMenu::item:!enabled {
+        color: rgb(155, 155, 155);
+}
+QMenu::item:enabled:selected {
+    background-color: #ededef;
+}
+QMenu::separator {
+    height: 1px;
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: #ededef;
+}
+QMenu::indicator {
+        width: 13px;
+        height: 13px;
+}
+QMenu::icon {
+        padding-left: 13px;
+        padding-right: 13px;
+}
+
+/*QMenu {
+    background-color: #FAFAFC;
+    border: 1px solid #c4c4c6;
+    border-radius: 1px;
+}
+
+QMenu::item {
+    color: #010101;
+    height: 35px;
+    width: 212px;
+
+    spacing: 20px;
+}
+
+QMenu::separator {
+     height: 1px;
+     margin-left: 2px;
+     margin-right: 2px;
+     margin-top: 0px;
+     background-color: #ededef;
+ }
+
+QMenu::item:selected {
+    background-color: #ededef;
+}*/
+
 #vertical1pixLabel {
     max-width: 1px;
     min-width: 1px;

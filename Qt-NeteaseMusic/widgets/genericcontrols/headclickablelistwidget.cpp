@@ -22,7 +22,7 @@ extern MainWindow *mm;
 const int SongListNameId = Qt::UserRole + 1;
 
 myViewStyle::myViewStyle(QStyle* style)
-     :QProxyStyle(style)
+    :QProxyStyle(style)
 {}
 
 void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const{
@@ -71,30 +71,54 @@ void ContextMenuListWidget::clearCheckedStatus()
 
 void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-    setSelectionMode(QAbstractItemView::MultiSelection);
-//itemAt(event->pos())->setSelected(true);
+    QListWidgetItem *ip = itemAt(event->pos());
+    if (!ip)
+        return;
+
+    bool bSelected = ip->isSelected();
+    if (!bSelected) {
+        setSelectionMode(QAbstractItemView::MultiSelection);
+        ip->setSelected(true);
+        ((HoverableWidget *)itemWidget(ip))->setChecked(true);
+    }
+
+
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
     shadow_effect->setOffset(0, 0);
     shadow_effect->setColor(Qt::gray);
     shadow_effect->setBlurRadius(8);
 
-//    QLabel *w = new QLabel(mm);
-//    w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
-//    w->setObjectName("ddd");
-//    w->setGraphicsEffect(shadow_effect);
-//    w->setText("FFFFFFFFFF");
-//    w->setFocus();
-//    w->installEventFilter(this);
-//    w->move(mapTo(mm, event->pos()));
-//    w->show();
+    //    QLabel *w = new QLabel(mm);
+    //    w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
+    //    w->setObjectName("ddd");
+    //    w->setGraphicsEffect(shadow_effect);
+    //    w->setText("FFFFFFFFFF");
+    //    w->setFocus();
+    //    w->installEventFilter(this);
+    //    w->move(mapTo(mm, event->pos()));
+    //    w->show();
 
-    QMenu *m_pPreMenu=new QMenu(this);
-    m_pPreMenu->addAction("4");
-    m_pPreMenu->addAction("3");
-    m_pPreMenu->addAction("2");
-    m_pPreMenu->addAction("1");
-//    m_pPreMenu->move(event->globalPos());
-    m_pPreMenu->exec(event->globalPos());
+    QMenu *menu=new QMenu();
+    menu->setStyle(new MyProxyStyle);
+    menu->setAttribute(Qt::WA_TranslucentBackground);
+    menu->setWindowFlags(menu->windowFlags() | Qt::NoDropShadowWindowHint);
+    menu->addAction(QIcon(":/uiresource/menu/icn_play.png") ,tr("Play"));
+    menu->addAction(QIcon(":/uiresource/menu/icn_addto.png") ,tr("Play next"));
+    menu->addSeparator();
+    menu->addAction(QIcon(":/uiresource/menu/icn_share.png") ,tr("Share..."));
+    menu->addAction(QIcon(":/uiresource/menu/icn_link.png") ,tr("Copy link"));
+    menu->addAction(QIcon(":/uiresource/menu/icn_download.png") ,tr("Download all"));
+    menu->addAction(QIcon(":/uiresource/menu/icn_export.png") ,tr("Copy all songs"));
+    menu->addSeparator();
+    menu->addAction(QIcon(":/uiresource/menu/icn_edit.png") ,tr("Edit song list info"));
+    menu->addAction(QIcon(":/uiresource/menu/icn_delete.png") ,tr("Delete this list"));
+    menu->exec(QCursor::pos());
+
+    if (!bSelected) {
+        ip->setSelected(false);
+        ((HoverableWidget *)itemWidget(ip))->setChecked(false);
+        setSelectionMode(QAbstractItemView::NoSelection);
+    }
 }
 
 bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)

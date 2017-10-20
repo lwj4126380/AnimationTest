@@ -2,9 +2,52 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>ContextMenuListWidget</name>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="95"/>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="96"/>
+        <source>Play next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="98"/>
+        <source>Share...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="99"/>
+        <source>Copy link</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="100"/>
+        <source>Download all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="101"/>
+        <source>Copy all songs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="103"/>
+        <source>Edit song list info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="104"/>
+        <source>Delete this list</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>HeadClickableListWidget</name>
     <message>
-        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="374"/>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="397"/>
         <source>Song List Name</source>
         <translation type="unfinished">歌单名称</translation>
     </message>

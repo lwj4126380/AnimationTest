@@ -6,42 +6,42 @@
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="95"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>播放(Enter)</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="96"/>
         <source>Play next</source>
-        <translation type="unfinished"></translation>
+        <translation>下一首播放</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="98"/>
         <source>Share...</source>
-        <translation type="unfinished"></translation>
+        <translation>分享...</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="99"/>
         <source>Copy link</source>
-        <translation type="unfinished"></translation>
+        <translation>复制链接</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="100"/>
         <source>Download all</source>
-        <translation type="unfinished"></translation>
+        <translation>下载全部(L)</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="101"/>
         <source>Copy all songs</source>
-        <translation type="unfinished"></translation>
+        <translation>复制已下载的MP3文件</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="103"/>
         <source>Edit song list info</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑歌单信息(E)</translation>
     </message>
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="104"/>
         <source>Delete this list</source>
-        <translation type="unfinished"></translation>
+        <translation>删除歌单(Delete)</translation>
     </message>
 </context>
 <context>
@@ -49,7 +49,7 @@
     <message>
         <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="397"/>
         <source>Song List Name</source>
-        <translation type="unfinished">歌单名称</translation>
+        <translation>歌单名称</translation>
     </message>
 </context>
 <context>
@@ -66,7 +66,7 @@
         <location filename="widgets/genericcontrols/searchlineedit.cpp" line="8"/>
         <source>search music, user</source>
         <translatorcomment>搜索音乐，歌手，歌词，用户</translatorcomment>
-        <translation type="unfinished">搜索音乐，歌手，歌词，用户</translation>
+        <translation>搜索音乐，歌手，歌词，用户</translation>
     </message>
 </context>
 <context>
@@ -74,67 +74,67 @@
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="29"/>
         <source>Recommand</source>
-        <translation type="unfinished">推荐</translation>
+        <translation>推荐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="31"/>
         <source>Discover Music</source>
-        <translation type="unfinished">发现音乐</translation>
+        <translation>发现音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="32"/>
         <source>Personal FM</source>
-        <translation type="unfinished">私人FM</translation>
+        <translation>私人FM</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="33"/>
         <source>MV</source>
-        <translation type="unfinished">MV</translation>
+        <translation>MV</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="34"/>
         <source>Friend</source>
-        <translation type="unfinished">朋友</translation>
+        <translation>朋友</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="37"/>
         <source>My Music</source>
-        <translation type="unfinished">我的音乐</translation>
+        <translation>我的音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="39"/>
         <source>Local Music</source>
-        <translation type="unfinished">本地音乐</translation>
+        <translation>本地音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="40"/>
         <source>Download Manager</source>
-        <translation type="unfinished">下载管理</translation>
+        <translation>下载管理</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="41"/>
         <source>My Cloud</source>
-        <translation type="unfinished">我的音乐云盘</translation>
+        <translation>我的音乐云盘</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="42"/>
         <source>My Artist</source>
-        <translation type="unfinished">我的歌手</translation>
+        <translation>我的歌手</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="45"/>
         <source>Created Play List</source>
-        <translation type="unfinished">创建的歌单</translation>
+        <translation>创建的歌单</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="47"/>
         <source>My Love Music</source>
-        <translation type="unfinished">我喜欢的音乐</translation>
+        <translation>我喜欢的音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="50"/>
         <source>Stored Play List</source>
-        <translation type="unfinished">收藏的歌单</translation>
+        <translation>收藏的歌单</translation>
     </message>
 </context>
 <context>
@@ -142,7 +142,7 @@
     <message>
         <location filename="libsleek/sleekborderless.cpp" line="53"/>
         <source>not login</source>
-        <translation type="unfinished">未登录</translation>
+        <translation>未登录</translation>
     </message>
 </context>
 </TS>

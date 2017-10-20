@@ -35,12 +35,12 @@ QMenu::separator {
     background-color: #ededef;
 }
 QMenu::indicator {
-        width: 13px;
-        height: 13px;
+    width: 13px;
+    height: 13px;
 }
 QMenu::icon {
-        padding-left: 13px;
-        padding-right: 13px;
+    padding-left: 13px;
+    padding-right: 13px;
 }
 
 /*QMenu {

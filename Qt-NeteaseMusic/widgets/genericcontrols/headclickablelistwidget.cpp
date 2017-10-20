@@ -165,9 +165,10 @@ void ContextMenuListWidget::mouseMoveEvent(QMouseEvent *event)
     QPoint dis = event->pos()-startPos;
     if (!isLeftButtonClicked)
         goto end;
-    isMouseMoved = true;
-    if (dis.manhattanLength() > 10)
+    if (dis.manhattanLength() > 10) {
+        isMouseMoved = true;
         setState(QAbstractItemView::DraggingState);
+    }
 end:
     QListWidget::mouseMoveEvent(event);
 }

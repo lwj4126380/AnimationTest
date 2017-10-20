@@ -24,7 +24,7 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent),
 
     QVBoxLayout *wLayout = new QVBoxLayout();
     wLayout->setMargin(0);
-    wLayout->setSpacing(0);
+    wLayout->setSpacing(10);
 
     HeadClickableListWidget *recommend = new HeadClickableListWidget(HeadClickableListWidget::NotClickable, tr("Recommand"), QVariant());
     connect(recommend, &HeadClickableListWidget::listItemClicked, this, &SideBar::clearSelected);

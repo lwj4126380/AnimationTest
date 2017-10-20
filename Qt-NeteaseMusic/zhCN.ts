@@ -4,7 +4,7 @@
 <context>
     <name>HeadClickableListWidget</name>
     <message>
-        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="259"/>
+        <location filename="widgets/genericcontrols/headclickablelistwidget.cpp" line="374"/>
         <source>Song List Name</source>
         <translation type="unfinished">歌单名称</translation>
     </message>
@@ -23,7 +23,7 @@
         <location filename="widgets/genericcontrols/searchlineedit.cpp" line="8"/>
         <source>search music, user</source>
         <translatorcomment>搜索音乐，歌手，歌词，用户</translatorcomment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">搜索音乐，歌手，歌词，用户</translation>
     </message>
 </context>
 <context>
@@ -31,67 +31,67 @@
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="29"/>
         <source>Recommand</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">推荐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="31"/>
         <source>Discover Music</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">发现音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="32"/>
         <source>Personal FM</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">私人FM</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="33"/>
         <source>MV</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MV</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="34"/>
         <source>Friend</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">朋友</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="37"/>
         <source>My Music</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">我的音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="39"/>
         <source>Local Music</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">本地音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="40"/>
         <source>Download Manager</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">下载管理</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="41"/>
         <source>My Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">我的音乐云盘</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="42"/>
         <source>My Artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">我的歌手</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="45"/>
         <source>Created Play List</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">创建的歌单</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="47"/>
         <source>My Love Music</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">我喜欢的音乐</translation>
     </message>
     <message>
         <location filename="widgets/uicomponent/sidebar.cpp" line="50"/>
         <source>Stored Play List</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">收藏的歌单</translation>
     </message>
 </context>
 <context>
@@ -99,7 +99,7 @@
     <message>
         <location filename="libsleek/sleekborderless.cpp" line="53"/>
         <source>not login</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">未登录</translation>
     </message>
 </context>
 </TS>

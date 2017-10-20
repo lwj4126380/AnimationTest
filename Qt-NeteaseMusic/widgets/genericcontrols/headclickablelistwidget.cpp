@@ -84,7 +84,6 @@ bool ContextMenuListWidget::eventFilter(QObject *watched, QEvent *event)
 
 void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
 {
-    qDebug() << "AAAAAAAA";
     Q_UNUSED(supportedActions);
     QListWidgetItem *item = startDragItem;
     QList<QListWidgetItem*> tl;
@@ -131,7 +130,6 @@ void ContextMenuListWidget::startDrag(Qt::DropActions supportedActions)
 
 void ContextMenuListWidget::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "1111111111111";
     isLeftButtonClicked = event->button() == Qt::LeftButton;
     startPos = event->pos();
     startDragItem = itemAt(startPos);
@@ -140,7 +138,6 @@ void ContextMenuListWidget::mousePressEvent(QMouseEvent *event)
 
 void ContextMenuListWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    qDebug() << "22222222222";
     if (!isMouseMoved) {
         setSelectionMode(QAbstractItemView::SingleSelection);
         itemAt(event->pos())->setSelected(true);
@@ -150,11 +147,10 @@ void ContextMenuListWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void ContextMenuListWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() << "33333333333" << event->button();
+    QPoint dis = event->pos()-startPos;
     if (!isLeftButtonClicked)
         goto end;
     isMouseMoved = true;
-    QPoint dis = event->pos()-startPos;
     if (dis.manhattanLength() > 5)
         setState(QAbstractItemView::DraggingState);
 end:
@@ -179,7 +175,6 @@ void ContextMenuListWidget::dropEvent(QDropEvent *event)
 
     if (b) {
         QTimer::singleShot(50, [&, targetIndex](){
-            qDebug() << "ddddd  " << targetIndex;
             setSelectionMode(QAbstractItemView::SingleSelection);
             setCurrentRow(targetIndex);
             setSelectionMode(QAbstractItemView::NoSelection);

@@ -162,5 +162,9 @@
         <file>uiresource/menu/black/icn_twoline.png</file>
         <file>uiresource/menu/black/icn_unlock.png</file>
         <file>uiresource/menu/black/icn_words.png</file>
+        <file>uiresource/svg/btmbar/next-normal.svg</file>
+        <file>uiresource/svg/btmbar/pause-normal.svg</file>
+        <file>uiresource/svg/btmbar/play-normal.svg</file>
+        <file>uiresource/svg/btmbar/prev-normal.svg</file>
     </qresource>
 </RCC>

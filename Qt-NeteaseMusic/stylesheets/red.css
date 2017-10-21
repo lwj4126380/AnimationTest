@@ -7,27 +7,124 @@ QPushButton {
     border-style: solid;
 }
 
+/*play control area style*/
+
+QSlider::groove:horizontal {
+    border: none;
+    border-radius: 2px;
+    height: 4px;
+    background: #c2c2c4;
+/*    margin: 2px 0;*/
+}
+
+QSlider::handle:horizontal {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b4b4b4, stop:1 #8f8f8f);
+    width: 14px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+
+
+HoverAnimateButton {
+    background-color: #e83c3c;
+    qproperty-startColor: #e83c3c;
+    qproperty-endColor: #d33030;
+    border-style: solid;
+}
+
+#previousBtn, #nextBtn {
+    min-height: 30px;
+    max-height: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    border-radius: 15px;
+}
+
+#previousBtn {
+    image: url(:/uiresource/svg/btmbar/prev-normal.svg);
+}
+
+#nextBtn {
+    image: url(:/uiresource/svg/btmbar/next-normal.svg);
+}
+
+#playPauseBtn {
+    min-height: 34px;
+    max-height: 34px;
+    min-width: 34px;
+    max-width: 34px;
+    border-radius: 17px;
+    image: url(:/uiresource/svg/btmbar/play-normal.svg);
+}
+
+PlayWidget {
+    background-color: #f6f6f8;
+    min-height: 48px;
+    max-height: 48px;
+    border-style: solid;
+    border-top-width: 1px;
+    border-top-color: #e1e1e2;
+}
+
+/*end---------------------*/
+
+/*menu style*/
+
+QLabel[LabelType="menuLabelIcon"] {
+    min-height: 18px;
+    max-height: 18px;
+    min-width: 18px;
+    max-width: 18px;
+}
+
+#icn_play {
+    image: url(:/uiresource/menu/icn_play.png);
+}
+#icn_addto {
+    image: url(:/uiresource/menu/icn_addto.png);
+}
+#icn_share {
+    image: url(:/uiresource/menu/icn_share.png);
+}
+#icn_link {
+    image: url(:/uiresource/menu/icn_link.png);
+}
+#icn_download {
+    image: url(:/uiresource/menu/icn_download.png);
+}
+#icn_export {
+    image: url(:/uiresource/menu/icn_export.png);
+}
+#icn_edit {
+    image: url(:/uiresource/menu/icn_edit.png);
+}
+#icn_delete {
+    image: url(:/uiresource/menu/icn_delete.png);
+}
+
+QLabel[LabelType="menuLabelText"] {
+    color: #010101;
+}
+
+QLabel[LabelType="menuLabelText"]:!enabled {
+    color: #787878;
+}
+
+#menuWidget {
+    min-height: 35px;
+    max-height: 35px;
+}
+
+#menuWidget:hover {
+    background-color: #ededef;
+}
+
 QMenu {
     background-color: #FAFAFC;
     border: 1px solid #c4c4c6;
     border-radius: 1px;
 }
-QMenu::item {
-    height: 35px;
-    padding-left: 44px;
-    padding-right: 44px;
-    margin-left: 1px;
-    margin-right: 1px;
-}
-QMenu::item:enabled {
-    color: #010101;
-}
-QMenu::item:!enabled {
-        color: rgb(155, 155, 155);
-}
-QMenu::item:enabled:selected {
-    background-color: #ededef;
-}
+
 QMenu::separator {
     height: 1px;
     margin-left: 2px;
@@ -38,36 +135,8 @@ QMenu::indicator {
     width: 13px;
     height: 13px;
 }
-QMenu::icon {
-    padding-left: 13px;
-    padding-right: 13px;
-}
+/*end-----------------*/
 
-/*QMenu {
-    background-color: #FAFAFC;
-    border: 1px solid #c4c4c6;
-    border-radius: 1px;
-}
-
-QMenu::item {
-    color: #010101;
-    height: 35px;
-    width: 212px;
-
-    spacing: 20px;
-}
-
-QMenu::separator {
-     height: 1px;
-     margin-left: 2px;
-     margin-right: 2px;
-     margin-top: 0px;
-     background-color: #ededef;
- }
-
-QMenu::item:selected {
-    background-color: #ededef;
-}*/
 
 #vertical1pixLabel {
     max-width: 1px;
@@ -432,6 +501,7 @@ QPushButton[ButtonType="sideWidgetHead"] {
     background-color: #f5f5f7;
     border-style: solid;
     outline: 0;
+    qproperty-dropIndicatorColor: rgb(198, 47, 47);
 }
 
 #leftListWidget::item {

@@ -3,6 +3,7 @@
 #include "widgets/uicomponent/sidebar.h"
 #include <QDebug>
 #include <QSplitter>
+#include "widgets/uicomponent/playwidget.h"
 MainWindow *mm;
 MainWindow::MainWindow(QApplication *app, bool isMainWindow) :
     SleekWindow(app, QString("TestWindow"), isMainWindow),
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QApplication *app, bool isMainWindow) :
     la->addWidget(sp);
     sp->setStretchFactor(0, 1);
     sp->setStretchFactor(1, 10);
+    la->addWidget(new PlayWidget);
     centerPrimaryScreen();
 }
 

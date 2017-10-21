@@ -25,14 +25,16 @@ SOURCES += main.cpp\
     widgets/genericcontrols/searchlineedit.cpp \
     widgets/genericcontrols/headclickablelistwidget.cpp \
     widgets/uicomponent/sidebar.cpp \
-    utils/qsshelper.cpp
+    utils/qsshelper.cpp \
+    widgets/uicomponent/playwidget.cpp
 
 HEADERS  += mainwindow.h \
     widgets/genericcontrols/hoverablewidget.h \
     widgets/genericcontrols/searchlineedit.h \
     widgets/genericcontrols/headclickablelistwidget.h \
     widgets/uicomponent/sidebar.h \
-    utils/qsshelper.h
+    utils/qsshelper.h \
+    widgets/uicomponent/playwidget.h
 
 FORMS    += mainwindow.ui
 

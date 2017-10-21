@@ -4,10 +4,19 @@
 #include <QWidget>
 #include <QListWidget>
 #include <QProxyStyle>
+#include <QMenu>
 
 class QListWidget;
 class QListWidgetItem;
 class HoverableWidget;
+
+class CustomMenu : public QMenu {
+    Q_OBJECT
+public:
+    CustomMenu(QWidget *parent=Q_NULLPTR);
+
+    void addWidgetAction(QString iconLabelObjName, QString text, bool enabled=true);
+};
 
 class MyProxyStyle : public QProxyStyle
 {
@@ -40,6 +49,8 @@ public:
 class ContextMenuListWidget : public QListWidget {
     Q_OBJECT
 
+    Q_PROPERTY(QColor dropIndicatorColor READ dropIndicatorColor WRITE setDropIndicatorColor)
+
 public:
     enum DragType {
         NotDragable,
@@ -50,6 +61,8 @@ public:
 public:
     explicit ContextMenuListWidget(DragType type, QWidget *parent = Q_NULLPTR);
     void clearCheckedStatus();
+    void setDropIndicatorColor(QColor color) { mDropIndicatorColor = color; }
+    QColor dropIndicatorColor() { return mDropIndicatorColor; }
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
@@ -72,6 +85,7 @@ private:
     QListWidgetItem *startDragItem;
     HoverableWidget *preHoverableWidget;
     DragType  dragType;
+    QColor mDropIndicatorColor;
 
 signals:
     void userSelectItem();

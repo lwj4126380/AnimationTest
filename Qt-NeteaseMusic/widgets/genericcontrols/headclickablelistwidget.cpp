@@ -17,9 +17,40 @@
 #include <QMimeData>
 #include <QDrag>
 #include <QPainter>
+#include <QWidgetAction>
 extern MainWindow *mm;
 
 const int SongListNameId = Qt::UserRole + 1;
+
+CustomMenu::CustomMenu(QWidget *parent) : QMenu(parent)
+{
+    setWindowFlags(windowFlags() | Qt::NoDropShadowWindowHint);
+}
+
+void CustomMenu::addWidgetAction(QString iconLabelObjName, QString text, bool enabled)
+{
+    QWidget * widget = new QWidget();
+    widget->setEnabled(enabled);
+    widget->setObjectName("menuWidget");
+    QHBoxLayout *layout = new QHBoxLayout(widget);
+    layout->setContentsMargins(13, 0, 13, 0);
+    layout->setSpacing(13);
+    QLabel *iconLabel = new QLabel();
+    iconLabel->setObjectName(iconLabelObjName);
+    iconLabel->setProperty("LabelType", "menuLabelIcon");
+    QLabel *textLabel = new QLabel(text);
+    textLabel->setProperty("LabelType", "menuLabelText");
+    layout->addWidget(iconLabel);
+    layout->addWidget(textLabel);
+    layout->addStretch();
+
+    QWidgetAction *wa = new QWidgetAction(this);
+//    wa->setShortcut();
+    wa->setEnabled(enabled);
+    wa->setDefaultWidget(widget);
+    addAction(wa);
+}
+
 
 myViewStyle::myViewStyle(QStyle* style)
     :QProxyStyle(style)
@@ -34,7 +65,11 @@ void myViewStyle::drawPrimitive ( PrimitiveElement element, const QStyleOption *
             opt.rect.setY(opt.rect.y()-1);
         opt.rect.setHeight(2);
         opt.rect.setBottom(opt.rect.bottom()-1);
-        painter->setPen(QColor(198, 47, 47));
+        ContextMenuListWidget *cml = (ContextMenuListWidget *)(widget);
+        if (cml)
+            painter->setPen(cml->dropIndicatorColor());
+        else
+            painter->setPen(QColor(198, 47, 47));
         if (widget) opt.rect.setRight(widget->width());
         QProxyStyle::drawPrimitive(element, &opt, painter, widget);
         return;
@@ -82,36 +117,32 @@ void ContextMenuListWidget::contextMenuEvent(QContextMenuEvent *event)
         ((HoverableWidget *)itemWidget(ip))->setChecked(true);
     }
 
+//    QMenu *menu=new QMenu();
+//    menu->setStyle(new MyProxyStyle);
+//    menu->setWindowFlags(menu->windowFlags() | Qt::NoDropShadowWindowHint);
+//    menu->addAction(QIcon(":/uiresource/menu/icn_play.png") ,tr("Play"));
+//    menu->addAction(QIcon(":/uiresource/menu/icn_addto.png") ,tr("Play next"));
+//    menu->addSeparator();
+//    menu->addAction(QIcon(":/uiresource/menu/icn_share.png") ,tr("Share..."));
+//    menu->addAction(QIcon(":/uiresource/menu/icn_link.png") ,tr("Copy link"));
+//    menu->addAction(QIcon(":/uiresource/menu/icn_download.png") ,tr("Download all"));
+//    menu->addAction(QIcon(":/uiresource/menu/icn_export.png") ,tr("Copy all songs"));
+//    menu->addSeparator();
+//    menu->addAction(QIcon(":/uiresource/menu/icn_edit.png") ,tr("Edit song list info"));
+//    menu->addAction(QIcon(":/uiresource/menu/icn_delete.png") ,tr("Delete this list"));
+//    menu->exec(QCursor::pos());
 
-    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
-    shadow_effect->setOffset(0, 0);
-    shadow_effect->setColor(Qt::gray);
-    shadow_effect->setBlurRadius(8);
-
-    //    QLabel *w = new QLabel(mm);
-    //    w->setStyleSheet("background-color: #FAFAFC; border: 1px solid #c4c4c6; border-radius: 1px;");
-    //    w->setObjectName("ddd");
-    //    w->setGraphicsEffect(shadow_effect);
-    //    w->setText("FFFFFFFFFF");
-    //    w->setFocus();
-    //    w->installEventFilter(this);
-    //    w->move(mapTo(mm, event->pos()));
-    //    w->show();
-
-    QMenu *menu=new QMenu();
-    menu->setStyle(new MyProxyStyle);
-    menu->setAttribute(Qt::WA_TranslucentBackground);
-    menu->setWindowFlags(menu->windowFlags() | Qt::NoDropShadowWindowHint);
-    menu->addAction(QIcon(":/uiresource/menu/icn_play.png") ,tr("Play"));
-    menu->addAction(QIcon(":/uiresource/menu/icn_addto.png") ,tr("Play next"));
+    CustomMenu *menu = new CustomMenu();
+    menu->addWidgetAction("icn_play", tr("Play"));
+    menu->addWidgetAction("icn_addto" ,tr("Play next"), false);
     menu->addSeparator();
-    menu->addAction(QIcon(":/uiresource/menu/icn_share.png") ,tr("Share..."));
-    menu->addAction(QIcon(":/uiresource/menu/icn_link.png") ,tr("Copy link"));
-    menu->addAction(QIcon(":/uiresource/menu/icn_download.png") ,tr("Download all"));
-    menu->addAction(QIcon(":/uiresource/menu/icn_export.png") ,tr("Copy all songs"));
+    menu->addWidgetAction("icn_share" ,tr("Share..."));
+    menu->addWidgetAction("icn_link" ,tr("Copy link"));
+    menu->addWidgetAction("icn_download" ,tr("Download all"));
+    menu->addWidgetAction("icn_export" ,tr("Copy all songs"));
     menu->addSeparator();
-    menu->addAction(QIcon(":/uiresource/menu/icn_edit.png") ,tr("Edit song list info"));
-    menu->addAction(QIcon(":/uiresource/menu/icn_delete.png") ,tr("Delete this list"));
+    menu->addWidgetAction("icn_edit" ,tr("Edit song list info"));
+    menu->addWidgetAction("icn_delete" ,tr("Delete this list"));
     menu->exec(QCursor::pos());
 
     if (!bSelected) {

@@ -70,14 +70,47 @@ PlayWidget::PlayWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout *musicSliderLayout = new QHBoxLayout();
     QLabel *curTimeLabel = new QLabel("00:00");
     QLabel *durationLabel = new QLabel("00:00");
-    QSlider *timeSlider = new QSlider(Qt::Horizontal);
+    CustomSlider *timeSlider = new CustomSlider(Qt::Horizontal);
     timeSlider->setStyle(new NewSliderStyle);
+    timeSlider->setRange(0, 1000);
     musicSliderLayout->addWidget(curTimeLabel);
     musicSliderLayout->addWidget(timeSlider);
     musicSliderLayout->addWidget(durationLabel);
 
     root->addLayout(hb);
     root->addLayout(musicSliderLayout);
+}
+
+CustomSlider::CustomSlider(Qt::Orientation orientation, QWidget *parent) : QSlider(orientation, parent)
+{
+
+}
+
+void CustomSlider::paintEvent(QPaintEvent *event)
+{
+    QSlider::paintEvent((event));
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+    QStyle *styl=style();
+    QRect rectHandle=styl->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, NULL);
+    QRect rectGroove=styl->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, NULL);
+
+    int avl=styl->pixelMetric(QStyle::PM_SliderSpaceAvailable, &opt, this);
+    QPainter p(this);
+    int dd = rectGroove.width()/4;
+    int offset=14;
+    if (rectHandle.x() < dd)
+        offset=14;
+    else if (rectHandle.x() < 2*dd)
+        offset -= 1;
+    else if (rectHandle.x() < 3*dd)
+        offset -= 2;
+    else
+        offset -= 3;
+    QRect h = QRect(rectHandle.x()+offset, 9, 10, 4);
+//    h.setX(rectHandle.x()+18);
+    p.fillRect(h, QColor(194, 194, 196));
+    qDebug() << "AAAAA  " << rectHandle << rectGroove << avl;
 }
 
 void PlayWidget::paintEvent(QPaintEvent *event)
@@ -88,3 +121,4 @@ void PlayWidget::paintEvent(QPaintEvent *event)
     QPainter  p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
+

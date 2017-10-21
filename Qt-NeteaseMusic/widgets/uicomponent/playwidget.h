@@ -4,8 +4,9 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QPropertyAnimation>
-
+#include <QSlider>
 #include <QProxyStyle>
+#include <QStyleOptionSlider>
 
 class NewSliderStyle : public QProxyStyle
 {
@@ -47,6 +48,18 @@ protected:
 private:
     QColor mStartColor;
     QColor mEndColor;
+};
+
+class CustomSlider : public QSlider{
+    Q_OBJECT
+public:
+    CustomSlider(Qt::Orientation orientation, QWidget *parent = Q_NULLPTR);
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+private:
+    QStyleOptionSlider opt;
 };
 
 class PlayWidget : public QWidget

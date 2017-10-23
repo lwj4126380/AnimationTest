@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui svg xml
+QT       += core gui svg xml network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,6 +14,8 @@ TEMPLATE = app
 CONFIG += c++11
 
 include (./libsleek/libsleek.pri)
+include (./audio/decoder/decoders.pri)
+include (./audio/dataprovider/dataprovider.pri)
 
 INCLUDEPATH += $$PWD/libsleek
 

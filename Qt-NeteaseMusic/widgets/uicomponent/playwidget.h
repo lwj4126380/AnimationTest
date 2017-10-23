@@ -11,8 +11,6 @@
 class NewSliderStyle : public QProxyStyle
 {
 public:
-    using QProxyStyle::QProxyStyle;
-
     int styleHint(QStyle::StyleHint hint, const QStyleOption* option = 0, const QWidget* widget = 0, QStyleHintReturn* returnData = 0) const
     {
         if (hint == QStyle::SH_Slider_AbsoluteSetButtons)

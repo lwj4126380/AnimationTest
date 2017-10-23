@@ -9,7 +9,7 @@ HttpProvider::HttpProvider(QString url, QObject *parent) : QObject(parent)
     connect(reply, &QNetworkReply::finished, this, &HttpProvider::onNetworkFinished);
 }
 
-void HttpProvider::getRemainData(QByteArray &data)
+void HttpProvider::getMoreAudioData(QByteArray &data)
 {
     mutex.lock();
     data = cacheData;

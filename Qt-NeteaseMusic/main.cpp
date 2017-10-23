@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 //    w.show();
 
     Mpg123Decoder *dc = new Mpg123Decoder();
-    dc->Open(new HttpProvider("http://m10.music.126.net/20171023175008/c18897adcc04b79ac7e3762be188d0c7/ymusic/82cf/9884/0c60/d5c5bdb436ef45c22fa2b4e85a9ecdbb.mp3"));
+    dc->Open(new HttpProvider("http://m10.music.126.net/20171023184116/0ed9e608f5e529f2f6acce673255e674/ymusic/6f94/6414/6a60/32a736bcb6180421ae2ae5baf1bd94af.mp3"));
 
 //    while (1) {
 ////        dc->GetBuffer();

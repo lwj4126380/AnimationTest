@@ -133,7 +133,7 @@ bool Mpg123Decoder::Feed() {
     qDebug() << "FFFFFF";
     if (dataProvider) {
         QByteArray data;
-        dataProvider->getRemainData(data);
+        dataProvider->getMoreAudioData(data);
         if (data.size()) {
             qDebug() << "AAAAAAAAAA  " << data.size();
             if (mpg123_feed(this->decoder, (unsigned char *)data.data(), data.size()) == MPG123_OK) {

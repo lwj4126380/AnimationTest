@@ -11,7 +11,7 @@ class HttpProvider : public QObject
     Q_OBJECT
 public:
     explicit HttpProvider(QString url, QObject *parent = 0);
-    void getRemainData(QByteArray &data);
+    void getMoreAudioData(QByteArray &data);
 
 public slots:
     void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);

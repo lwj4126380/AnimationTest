@@ -8,22 +8,18 @@
 
 FILE *ff;
 
-Mpg123Decoder::Mpg123Decoder()
-    : cachedLength(0)
+Mpg123Decoder::Mpg123Decoder(QObject *parent)
+    : QThread(parent)
+    , cachedLength(0)
     , decoder(NULL)
     , sampleRate(44100)
     , channels(2)
-    , lastMpg123Status(MPG123_NEED_MORE) {
+    , lastMpg123Status(MPG123_NEED_MORE)
+    , bEnd(false){
     mpg123_init();
     this->decoder = mpg123_new(NULL, NULL);
     this->sampleSizeBytes = sizeof(float);
     ff = fopen("J:\\test.pcm", "wb");
-    QTimer *timer = new QTimer();
-    connect(timer, &QTimer::timeout, this, [&](){
-        GetBuffer();
-    });
-
-    timer->start(20);
 }
 
 Mpg123Decoder::~Mpg123Decoder() {
@@ -37,6 +33,59 @@ Mpg123Decoder::~Mpg123Decoder() {
 
 void Mpg123Decoder::Destroy() {
     delete this;
+}
+
+void Mpg123Decoder::run()
+{
+    unsigned char targetBuffer[STREAM_FEED_SIZE] = {0};
+
+    bool done = false;
+
+    size_t bytesWritten = 0;
+
+    while (!bEnd) {
+//        QThread::sleep(5);
+        int readResult = mpg123_read(
+                    this->decoder,
+                    targetBuffer,
+                    STREAM_FEED_SIZE,
+                    &bytesWritten);
+
+        switch (readResult) {
+        case MPG123_OK:
+        case MPG123_DONE:
+        case MPG123_ERR:
+            break;
+
+        case MPG123_NEED_MORE:
+            if (!this->Feed()) {
+                done = true;
+            }
+            break;
+
+        case MPG123_NEW_FORMAT:
+        {
+            int encoding = 0;
+
+            mpg123_getformat(
+                        this->decoder,
+                        &this->sampleRate,
+                        &this->channels,
+                        &encoding);
+
+            qDebug() << "output format:"
+                        "\n  type: " << encoding <<
+                        "\n  rate " << this->sampleRate <<
+                        "\n  channels " << this->channels << "\n";
+        }
+            break;
+        }
+//        if (readResult == MPG123_OK) {
+            qDebug() << "GGGGG " << bytesWritten;
+            fwrite(targetBuffer, 1, bytesWritten, ff);
+//        }
+        fflush(ff);
+    }
 }
 
 double Mpg123Decoder::SetPosition(double second) {
@@ -62,80 +111,21 @@ double Mpg123Decoder::SetPosition(double second) {
         feedMore--;
     }
 
-//    if (seekedTo >= 0) {
-//        if (this->fileStream->SetPosition(seekToFileOffset)) {
-//            return second;
-//        }
-//    }
+    //    if (seekedTo >= 0) {
+    //        if (this->fileStream->SetPosition(seekToFileOffset)) {
+    //            return second;
+    //        }
+    //    }
 
     return -1;
 }
 
-bool Mpg123Decoder::GetBuffer() {
-
-    unsigned char targetBuffer[STREAM_FEED_SIZE] = {0};
-
-    bool done = false;
-
-    size_t bytesWritten = 0;
-
-    do {
-        int readResult = mpg123_read(
-                    this->decoder,
-                    targetBuffer,
-                    STREAM_FEED_SIZE,
-                    &bytesWritten);
-
-        switch (readResult) {
-        case MPG123_OK:
-            break;
-
-        case MPG123_DONE:
-            done = true;
-            break;
-
-        case MPG123_NEED_MORE:
-            if (!this->Feed()) {
-                done = true;
-            }
-            break;
-
-        case MPG123_ERR:
-            return false;
-            break;
-
-        case MPG123_NEW_FORMAT: {
-            int encoding = 0;
-
-            mpg123_getformat(
-                        this->decoder,
-                        &this->sampleRate,
-                        &this->channels,
-                        &encoding);
-
-            qDebug() << "output format:"
-                         "\n  type: " << encoding <<
-                         "\n  rate " << this->sampleRate <<
-                         "\n  channels " << this->channels << "\n";
-        }
-            break;
-        }
-
-    } while (bytesWritten == 0 && !done);
-
-    fwrite(targetBuffer, 1, bytesWritten, ff);
-    qDebug() << "GGGGGGGG  " << bytesWritten;
-
-    return (bytesWritten > 0);
-}
-
 bool Mpg123Decoder::Feed() {
-    qDebug() << "FFFFFF";
     if (dataProvider) {
         QByteArray data;
         dataProvider->getMoreAudioData(data);
         if (data.size()) {
-            qDebug() << "AAAAAAAAAA  " << data.size();
+//            qDebug() << "AAAAAAAAAA  " << data.size();
             if (mpg123_feed(this->decoder, (unsigned char *)data.data(), data.size()) == MPG123_OK) {
                 return true;
             }

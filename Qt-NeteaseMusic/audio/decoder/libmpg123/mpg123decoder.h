@@ -1,20 +1,22 @@
 #ifndef MPG123DECODER_H
 #define MPG123DECODER_H
 
-#include <QObject>
+#include <QThread>
 #include <mpg123.h>
 #include "httpprovider.h"
 
-class Mpg123Decoder : public QObject {
+class Mpg123Decoder : public QThread {
     Q_OBJECT
 public:
-    Mpg123Decoder();
+    Mpg123Decoder(QObject *parent = Q_NULLPTR);
     virtual ~Mpg123Decoder();
 
     bool Open(HttpProvider *dataProvider);
     double SetPosition(double seconds);
-    bool GetBuffer();
     void Destroy();
+
+protected:
+    void run();
 
 private:
     bool Feed();
@@ -22,6 +24,7 @@ private:
 private:
     mpg123_handle *decoder;
     HttpProvider *dataProvider;
+    bool bEnd;
 
     unsigned long cachedLength;
     long sampleRate;

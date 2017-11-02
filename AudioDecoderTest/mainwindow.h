@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QQueue>
 #include <QRunnable>
+#include <QMutex>
 #include "BlockingQueue.h"
 extern "C" {
 #include <libavformat/avformat.h>
@@ -62,7 +63,6 @@ private:
     QTimer           read_timer;
     DataBuffer       music_data;
     bool             skip_read;
-    bool             is_seeking;
 
     friend class MainWindow;
 

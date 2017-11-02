@@ -12,7 +12,9 @@ FILE *fp_open;
 int fill_iobuffer(void * ptr,uint8_t *buf, int bufsize){
     AudioThread *at = (AudioThread *)ptr;
     bool b = true;
+    qDebug() << "tttttttttttttttttttttt";
     QByteArray qa = at->music_data.take_data(bufsize, &b);
+    qDebug() << "gggggggggggggggggggggg";
     if (!b) {
         qDebug() << "cancel read";
         return -1;
@@ -55,6 +57,11 @@ QByteArray DataBuffer::take_data(int64_t size, bool *b_success)
 {
     QByteArray data;
     QWriteLocker locker(&lock);
+    if (cancel_read) {
+        if (b_success)
+            *b_success = false;
+        return data;
+    }
     if (b_success)
         *b_success = true;
 
@@ -84,13 +91,12 @@ QByteArray DataBuffer::take_data(int64_t size, bool *b_success)
 AudioThread::AudioThread(QObject *parent) : QThread(parent),
     audio_stream(-1),
     music_data(4602255),
-    skip_read(false),
-    is_seeking(false)
+    skip_read(false)
 {
 
-    QFile *file = new QFile("J:\\test.mp3", this);
+    QFile *file = new QFile("F:\\test.mp3", this);
     file->open(QFile::ReadOnly);
-    read_timer.setInterval(200);
+    read_timer.setInterval(2000);
     connect(&read_timer, &QTimer::timeout, this, [=](){
         QByteArray qa = file->read(20480);
         if (qa.size())
@@ -118,20 +124,20 @@ void AudioThread::seek(qint64 pos)
         AudioThread *audio_thread;
         qint64 position;
     };
-    if (is_seeking) {
-        music_data.cancel_read = true;
-    }
+
     newSeekRequest(new SeekTask(this, pos));
+
+    music_data.cancel_read = true;
+    music_data.cond_empty.wakeAll();
 }
 
 void AudioThread::seekInternal(qint64 pos)
 {
     qDebug() << "seek start--------";
 
-    is_seeking = true;
     music_data.cancel_read = false;
     int ret = av_seek_frame(format_context, -1, pos*AV_TIME_BASE , AVSEEK_FLAG_ANY);
-    is_seeking = false;
+
     qDebug() << "seek result " << ret;
 }
 
@@ -160,7 +166,7 @@ void AudioThread::processNextSeekTask()
 void AudioThread::run()
 {
     qDebug() << "BBBBBB  " << QThread::currentThreadId();
-    fp_open = fopen("J:\\test.mp3", "rb");
+    fp_open = fopen("F:\\test.mp3", "rb");
 
     char b[1024] = {0};
 
@@ -218,7 +224,7 @@ void AudioThread::run()
 
 
     FILE *pFile=NULL;
-    pFile=fopen("output.pcm", "wb");
+//    pFile=fopen("output.pcm", "wb");
 
     AVPacket *packet=(AVPacket *)malloc(sizeof(AVPacket));
     av_init_packet(packet);
@@ -258,7 +264,7 @@ void AudioThread::run()
 //    seek(20);
 
     while (true) {
-//                QThread::msleep(1000);
+//                QThread::msleep(200);
         processNextSeekTask();
         qDebug() << music_data.cancel_read;
 
@@ -281,7 +287,7 @@ void AudioThread::run()
 
                 qDebug() << QString("index:%1    pts:%2     packet size:%3").arg(QString::number(index)).arg(QString::number(packet->pts)).arg(QString::number(packet->size));
 
-                fwrite(out_buffer, 1, out_buffer_size, pFile);
+//                fwrite(out_buffer, 1, out_buffer_size, pFile);
 
                 index++;
             }

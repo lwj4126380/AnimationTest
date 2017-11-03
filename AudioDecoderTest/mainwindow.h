@@ -8,6 +8,7 @@
 #include <QQueue>
 #include <QRunnable>
 #include <QMutex>
+#include "portaudio.h"
 #include "BlockingQueue.h"
 extern "C" {
 #include <libavformat/avformat.h>
@@ -35,17 +36,17 @@ private:
     int64_t    total_size;
     bool       cancel_read;
 
-    friend class AudioThread;
+    friend class DemuxThread;
     friend int64_t SeekFunc(void* ptr, int64_t pos, int whence);
     friend int fill_iobuffer(void * opaque,uint8_t *buf, int bufsize);
 
 };
 
-class AudioThread : public QThread
+class DemuxThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit AudioThread(QObject *parent = Q_NULLPTR);
+    explicit DemuxThread(QObject *parent = Q_NULLPTR);
     void seek(qint64 pos); //ms
 
 protected:
@@ -64,12 +65,17 @@ private:
     DataBuffer       music_data;
     bool             skip_read;
 
+
+    QByteArray decode_data;
+    QMutex mutex;
+
     friend class MainWindow;
 
     friend int64_t SeekFunc(void* ptr, int64_t pos, int whence);
     friend int fill_iobuffer(void * opaque,uint8_t *buf, int bufsize);
 
 };
+class QFile;
 
 class MainWindow : public QMainWindow
 {
@@ -79,16 +85,24 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    bool initAudio();
+    QFile *fff;
+
+    static int PACallback( const void *inputBuffer, void *outputBuffer,
+                                unsigned long len,
+                                const PaStreamCallbackTimeInfo* timeInfo,
+                                PaStreamCallbackFlags statusFlags,
+                                void *opaque );
+
 private slots:
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
-
 private:
     Ui::MainWindow *ui;
-    std::shared_ptr<AudioThread> at;
+    std::shared_ptr<DemuxThread> at;
 };
 
 #endif // MAINWINDOW_H

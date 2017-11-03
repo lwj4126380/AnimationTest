@@ -1,16 +1,24 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "audiothread.h"
 
 #include <QThread>
 #include <QDebug>
 #include <QFile>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
 
 FILE *fp_open;
 #define MAX_AUDIO_FRAME_SIZE 192000
 #define ONE_PACKET_LEN  32768
+#define SAMPLE_RATE 44100
+#define FRAMES_PER_BUFFER (2048 / (44100 / SAMPLE_RATE))
+#define BUFFER_SIZE FRAMES_PER_BUFFER*2
+typedef short SAMPLE;
 
 int fill_iobuffer(void * ptr,uint8_t *buf, int bufsize){
-    AudioThread *at = (AudioThread *)ptr;
+    DemuxThread *at = (DemuxThread *)ptr;
     bool b = true;
     qDebug() << "tttttttttttttttttttttt";
     QByteArray qa = at->music_data.take_data(bufsize, &b);
@@ -31,13 +39,13 @@ int fill_iobuffer(void * ptr,uint8_t *buf, int bufsize){
 
 int64_t SeekFunc(void* ptr, int64_t pos, int whence)
 {
-    AudioThread *at = (AudioThread *)ptr;
+    DemuxThread *at = (DemuxThread *)ptr;
     if (whence == AVSEEK_SIZE) {
         // return the file size if you wish to
 
         return 4602255;
     }
-qDebug() << "do seek" << pos;
+    qDebug() << "do seek" << pos;
     at->music_data.cur_pos = pos;
 
     return pos;
@@ -56,7 +64,7 @@ void DataBuffer::put_data(QByteArray &data)
 QByteArray DataBuffer::take_data(int64_t size, bool *b_success)
 {
     QByteArray data;
-    QWriteLocker locker(&lock);
+    QReadLocker locker(&lock);
     if (cancel_read) {
         if (b_success)
             *b_success = false;
@@ -88,32 +96,38 @@ QByteArray DataBuffer::take_data(int64_t size, bool *b_success)
     return data;
 }
 
-AudioThread::AudioThread(QObject *parent) : QThread(parent),
+DemuxThread::DemuxThread(QObject *parent) : QThread(parent),
     audio_stream(-1),
     music_data(4602255),
     skip_read(false)
 {
 
-    QFile *file = new QFile("F:\\test.mp3", this);
-    file->open(QFile::ReadOnly);
-    read_timer.setInterval(2000);
-    connect(&read_timer, &QTimer::timeout, this, [=](){
-        QByteArray qa = file->read(20480);
-        if (qa.size())
-            music_data.put_data(qa);
-        if (!qa.size()) {
-            qDebug() << "reach end, total size is: " << music_data.music_data.size();
-            read_timer.stop();
-        }
+    QNetworkAccessManager *ma = new QNetworkAccessManager();
+    QNetworkReply *reply = ma->get(QNetworkRequest(QUrl("http://7xiclj.com1.z0.glb.clouddn.com/591a63aaeca6ea635b5d7daa.mp3")));
+    connect(reply, &QNetworkReply::readyRead, this, [&, reply](){
+        music_data.put_data(reply->readAll());
     });
-    read_timer.start();
+
+//    QFile *file = new QFile("J:\\test.mp3", this);
+//    file->open(QFile::ReadOnly);
+//    read_timer.setInterval(200);
+//    connect(&read_timer, &QTimer::timeout, this, [=](){
+//        QByteArray qa = file->read(20480);
+//        if (qa.size())
+//            music_data.put_data(qa);
+//        if (!qa.size()) {
+//            qDebug() << "reach end, total size is: " << music_data.music_data.size();
+//            read_timer.stop();
+//        }
+//    });
+//    read_timer.start();
 }
 
-void AudioThread::seek(qint64 pos)
+void DemuxThread::seek(qint64 pos)
 {
     class SeekTask : public QRunnable {
     public:
-        SeekTask(AudioThread *dt, qint64 t)
+        SeekTask(DemuxThread *dt, qint64 t)
             : audio_thread(dt)
             , position(t)
         {}
@@ -121,7 +135,7 @@ void AudioThread::seek(qint64 pos)
             audio_thread->seekInternal(position);
         }
     private:
-        AudioThread *audio_thread;
+        DemuxThread *audio_thread;
         qint64 position;
     };
 
@@ -131,9 +145,11 @@ void AudioThread::seek(qint64 pos)
     music_data.cond_empty.wakeAll();
 }
 
-void AudioThread::seekInternal(qint64 pos)
+void DemuxThread::seekInternal(qint64 pos)
 {
     qDebug() << "seek start--------";
+    QMutexLocker locker(&mutex);
+    decode_data.clear();
 
     music_data.cancel_read = false;
     int ret = av_seek_frame(format_context, -1, pos*AV_TIME_BASE , AVSEEK_FLAG_ANY);
@@ -141,7 +157,7 @@ void AudioThread::seekInternal(qint64 pos)
     qDebug() << "seek result " << ret;
 }
 
-void AudioThread::newSeekRequest(QRunnable *r)
+void DemuxThread::newSeekRequest(QRunnable *r)
 {
     if (seek_tasks.size() >= seek_tasks.capacity()) {
         QRunnable *r = seek_tasks.take();
@@ -151,7 +167,7 @@ void AudioThread::newSeekRequest(QRunnable *r)
     seek_tasks.put(r);
 }
 
-void AudioThread::processNextSeekTask()
+void DemuxThread::processNextSeekTask()
 {
     if (seek_tasks.isEmpty())
         return;
@@ -163,10 +179,10 @@ void AudioThread::processNextSeekTask()
         delete task;
 }
 
-void AudioThread::run()
+void DemuxThread::run()
 {
     qDebug() << "BBBBBB  " << QThread::currentThreadId();
-    fp_open = fopen("F:\\test.mp3", "rb");
+    fp_open = fopen("J:\\test.mp3", "rb");
 
     char b[1024] = {0};
 
@@ -224,7 +240,7 @@ void AudioThread::run()
 
 
     FILE *pFile=NULL;
-//    pFile=fopen("output.pcm", "wb");
+        pFile=fopen("output.pcm", "wb");
 
     AVPacket *packet=(AVPacket *)malloc(sizeof(AVPacket));
     av_init_packet(packet);
@@ -261,10 +277,10 @@ void AudioThread::run()
                                       in_channel_layout,pCodecCtx->sample_fmt , pCodecCtx->sample_rate,0, NULL);
     swr_init(au_convert_ctx);
 
-//    seek(20);
+    //    seek(20);
 
     while (true) {
-//                QThread::msleep(200);
+//                        QThread::msleep(200);
         processNextSeekTask();
         qDebug() << music_data.cancel_read;
 
@@ -276,18 +292,20 @@ void AudioThread::run()
             continue;
         }
         if(packet->stream_index==audio_stream){
-
             ret = avcodec_decode_audio4( pCodecCtx, pFrame,&got_picture, packet);
+            if (packet->size != ret)
+                qDebug() << "vvvvvvvvvvvvvvvvvvvv   " << packet->size << ret;
             if ( ret < 0 ) {
                 printf("Error in decoding audio frame.\n");
                 return;
             }
             if ( got_picture > 0 ){
                 swr_convert(au_convert_ctx,&out_buffer, MAX_AUDIO_FRAME_SIZE,(const uint8_t **)pFrame->data , pFrame->nb_samples);
-
+                QMutexLocker locker(&mutex);
+                decode_data.append((const char *)out_buffer, out_buffer_size);
                 qDebug() << QString("index:%1    pts:%2     packet size:%3").arg(QString::number(index)).arg(QString::number(packet->pts)).arg(QString::number(packet->size));
 
-//                fwrite(out_buffer, 1, out_buffer_size, pFile);
+                                fwrite(out_buffer, 1, out_buffer_size, pFile);
 
                 index++;
             }
@@ -301,18 +319,70 @@ void AudioThread::run()
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    at = std::make_shared<AudioThread>();
+    at = std::make_shared<DemuxThread>();
+
+    fff = new QFile("J:\\output.pcm");
+    fff->open(QFile::ReadOnly);
+
+    initAudio();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 
+}
+
+
+int MainWindow::PACallback( const void *inputBuffer, void *outputBuffer,
+                            unsigned long len,
+                            const PaStreamCallbackTimeInfo* timeInfo,
+                            PaStreamCallbackFlags statusFlags,
+                            void *opaque )
+{
+    MainWindow *mw = (MainWindow *)opaque;
+    QMutexLocker locker(&mw->at->mutex); {
+        if (mw->at->decode_data.size() > 4096*2) {
+            QByteArray qa = mw->at->decode_data.remove(0, 4096*2);
+            memcpy(outputBuffer, qa.data(), 4096*2);
+        }
+    }
+//    mw->at->decode_data;
+//    mw->fff->read((char *)outputBuffer, 4096*2);
+
+    return 0;
+}
+
+bool MainWindow::initAudio()
+{
+    PaError    err;
+    err = Pa_Initialize();
+    if( err != paNoError )
+        return false;
+    PaStream *stream;
+    err = Pa_OpenDefaultStream( &stream,
+                                0,
+                                2,
+                                paInt16,
+                                SAMPLE_RATE,
+                                FRAMES_PER_BUFFER,
+                                PACallback,
+                                this);
+
+    if( err != paNoError )
+        return false;
+
+    err = Pa_StartStream( stream );
+    if( err != paNoError )
+        return false;
+
+    return true;
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -322,7 +392,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-//    at->music_data.put_data(QByteArray('a', 100));
+    //    at->music_data.put_data(QByteArray('a', 100));
 }
 
 void MainWindow::on_pushButton_3_clicked()

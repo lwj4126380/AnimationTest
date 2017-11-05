@@ -20,7 +20,13 @@
 ******************************************************************************/
 
 #include "Packet.h"
-#include "AVCompat.h"
+
+extern "C" {
+#include <libavformat/avformat.h>
+#include <libavcodec/avcodec.h>
+#include <libswresample/swresample.h>
+}
+
 
 namespace {
 static const struct RegisterMetaTypes {

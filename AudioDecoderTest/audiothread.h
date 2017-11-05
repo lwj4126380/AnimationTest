@@ -3,7 +3,6 @@
 
 #include <QThread>
 #include "PacketBuffer.h"
-#include "AVCompat.h"
 
 #include <QtCore/QMutex>
 #include <QtCore/QMutexLocker>

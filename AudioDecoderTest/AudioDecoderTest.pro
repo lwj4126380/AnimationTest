@@ -19,12 +19,14 @@ INCLUDEPATH += $$PWD/portaudio
 SOURCES += main.cpp\
         mainwindow.cpp \
     Packet.cpp \
-    PacketBuffer.cpp
+    PacketBuffer.cpp \
+    audiodemuxer.cpp
 
 HEADERS  += mainwindow.h \
     BlockingQueue.h \
     Packet.h \
     PacketBuffer.h \
-    ring.h
+    ring.h \
+    audiodemuxer.h
 
 FORMS    += mainwindow.ui

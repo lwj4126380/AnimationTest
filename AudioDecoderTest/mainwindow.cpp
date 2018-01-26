@@ -79,17 +79,19 @@ DemuxThread::DemuxThread(QObject *parent) : QThread(parent),
 
 void DemuxThread::seek(qint64 pos)
 {
+    packets.clear();
+
     class SeekTask : public QRunnable {
     public:
         SeekTask(DemuxThread *dt, qint64 t)
-            : audio_thread(dt)
+            : demux_thread(dt)
             , position(t)
         {}
         void run() {
-            audio_thread->seekInternal(position);
+            demux_thread->seekInternal(position);
         }
     private:
-        DemuxThread *audio_thread;
+        DemuxThread *demux_thread;
         qint64 position;
     };
 
@@ -102,7 +104,6 @@ void DemuxThread::seekInternal(qint64 pos)
 {
     qDebug() << "seek start--------";
     QMutexLocker locker(&mutex);
-    decode_data.clear();
 
     music_data.clear();
     int ret = av_seek_frame(format_context, -1, pos*AV_TIME_BASE , AVSEEK_FLAG_ANY);
@@ -254,7 +255,7 @@ void DemuxThread::run()
             if ( got_picture > 0 ){
                 swr_convert(au_convert_ctx,&out_buffer, MAX_AUDIO_FRAME_SIZE,(const uint8_t **)pFrame->data , pFrame->nb_samples);
                 QMutexLocker locker(&mutex);
-                decode_data.append((const char *)out_buffer, out_buffer_size);
+//                decode_data.append((const char *)out_buffer, out_buffer_size);
 //                qDebug() << QString("index:%1    pts:%2     packet size:%3").arg(QString::number(index)).arg(QString::number(packet->pts)).arg(QString::number(packet->size));
 
 //                                fwrite(out_buffer, 1, out_buffer_size, pFile);
@@ -299,14 +300,12 @@ int MainWindow::PACallback( const void *inputBuffer, void *outputBuffer,
                             void *opaque )
 {
     MainWindow *mw = (MainWindow *)opaque;
-    QMutexLocker locker(&mw->at->mutex); {
-        if (mw->at->decode_data.size() > 4096*2) {
-            QByteArray qa = mw->at->decode_data.remove(0, 4096*2);
-            memcpy(outputBuffer, qa.data(), 4096*2);
-        }
-    }
-//    mw->at->decode_data;
-//    mw->fff->read((char *)outputBuffer, 4096*2);
+//    QMutexLocker locker(&mw->at->mutex); {
+//        if (mw->at->decode_data.size() > 4096*2) {
+//            QByteArray qa = mw->at->decode_data.remove(0, 4096*2);
+//            memcpy(outputBuffer, qa.data(), 4096*2);
+//        }
+//    }
 
     return 0;
 }

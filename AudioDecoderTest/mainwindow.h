@@ -46,8 +46,6 @@ private:
     PacketBuffer packets;
     bool             skip_read;
 
-
-    QByteArray decode_data;
     QMutex mutex;
 
     friend class MainWindow;

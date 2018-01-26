@@ -27,11 +27,12 @@
 #include <QScopedPointer>
 #include <QWaitCondition>
 #include <QByteArray>
+#include <stdint.h>
 
 class RawAudioBuffer
 {
 public:
-    RawAudioBuffer();
+    RawAudioBuffer(int total_size, int thres_t);
     virtual ~RawAudioBuffer() {}
 
     /*!
@@ -57,11 +58,10 @@ public:
      * \param isValid a pointer to a bool (optional).  If isValid is set to true after a call, the returned item is valid. False means the queue was empty or the timeout expired.
      * \return the item taken.  It may not be valid if the queue was empty and timeout expired. Check optional isValid flag to determine if that is the case.
      */
-    QByteArray take(int len, unsigned long wait_timeout_ms = ULONG_MAX, bool *isValid = 0);
+    QByteArray take(int len, bool *isValid = 0, unsigned long wait_timeout_ms = ULONG_MAX);
     void setBlocking(bool block); //will wake if false. called when no more data can enqueue
     void blockEmpty(bool block);
-//TODO:setMinBlock,MaxBlock
-    inline void clear();
+    void clear();
     // TODO: checkEmpty, Enough, Full?
     inline bool isEmpty() const;
     inline bool isEnough() const; //size > thres
@@ -94,139 +94,11 @@ protected:
 private:
     mutable QReadWriteLock lock; //locker in const func
     QReadWriteLock block_change_lock;
-    QWaitCondition cond_empty;
+    QWaitCondition cond_enough;
+
+    friend int64_t SeekFunc(void* ptr, int64_t pos, int whence);
+    friend int fill_iobuffer(void * ptr,uint8_t *buf, int bufsize);
 };
 
-/* cap - thres = 24, about 1s
- * if fps is large, then larger capacity and threshold is preferred
- */
-RawAudioBuffer::RawAudioBuffer()
-    :block_enough(true),thres(32),cur_pos(0),total_size(0)
-{
-}
 
-void RawAudioBuffer::setThreshold(int min)
-{
-    //qDebug("queue threshold==>>%d", min);
-    QWriteLocker locker(&lock);
-    Q_UNUSED(locker);
-
-    thres = min;
-}
-
-bool RawAudioBuffer::put(const QByteArray &t)
-{
-    bool ret = true;
-    QWriteLocker locker(&lock);
-    Q_UNUSED(locker);
-    data_container.append(t);
-    onPut(t); // emit bufferProgressChanged here if buffering
-    if (checkEnough()) {
-        cond_empty.wakeOne(); //emit buffering finished here
-        //qDebug("queue is enough: %d/%d~%d", queue.size(), thres, cap);
-    } else {
-        //qDebug("buffering: %d/%d~%d", queue.size(), thres, cap);
-    }
-    return ret;
-}
-
-QByteArray RawAudioBuffer::take(int len, unsigned long timeout_ms, bool *isValid)
-{
-    if (isValid) *isValid = false;
-    QWriteLocker locker(&lock);
-    Q_UNUSED(locker);
-    int actual_len = -1;
-    if (checkEnoughForReadSpecificData(len, actual_len)) {//TODO:always block?
-        //qDebug("queue empty!!");
-        if (block_enough)
-            cond_empty.wait(&lock,timeout_ms); //block when empty only
-    }
-    if (checkEnoughForReadSpecificData(len, actual_len)) {
-        //qWarning("Queue is still empty");
-        return QByteArray();
-    }
-
-    QByteArray data = data_container.mid(cur_pos, actual_len);
-    cur_pos += actual_len;
-    if (isValid) *isValid = true;
-    onTake(data); // emit start buffering here if empty
-    return data;
-}
-
-void RawAudioBuffer::setBlocking(bool block)
-{
-    QWriteLocker locker(&lock);
-    Q_UNUSED(locker);
-    block_enough = block;
-    if (!block) {
-        cond_empty.wakeAll(); //empty still wait. setBlock=>setCapacity(-1)
-    }
-}
-
-void RawAudioBuffer::blockEmpty(bool block)
-{
-    if (!block) {
-        cond_empty.wakeAll();
-    }
-    QWriteLocker locker(&block_change_lock);
-    Q_UNUSED(locker);
-    block_enough = block;
-}
-
-void RawAudioBuffer::clear()
-{
-    QWriteLocker locker(&lock);
-    Q_UNUSED(locker);
-    //cond_empty.wakeAll();
-    data_container.clear();
-    //TODO: assert not empty
-    onTake(QByteArray());
-}
-
-bool RawAudioBuffer::isEmpty() const
-{
-    QReadLocker locker(&lock);
-    Q_UNUSED(locker);
-    return data_container.isEmpty();
-}
-
-bool RawAudioBuffer::isEnough() const
-{
-    QReadLocker locker(&lock);
-    Q_UNUSED(locker);
-    return data_container.size() >= thres;
-}
-
-int RawAudioBuffer::size() const
-{
-    QReadLocker locker(&lock);
-    Q_UNUSED(locker);
-    return data_container.size();
-}
-
-int RawAudioBuffer::threshold() const
-{
-    QReadLocker locker(&lock);
-    Q_UNUSED(locker);
-    return thres;
-}
-
-bool RawAudioBuffer::checkEnough() const
-{
-    return data_container.size()-cur_pos >= thres || data_container.size() == total_size;
-}
-
-bool RawAudioBuffer::checkEnoughForReadSpecificData(int len, int &actual_len)
-{
-    if (data_container.size()-cur_pos >= len) {
-        actual_len = len;
-        return true;
-    } else if (data_container.size() == total_size) {
-        actual_len = total_size-cur_pos;
-        return true;
-    } else {
-        actual_len = 0;
-        return false;
-    }
-}
 #endif

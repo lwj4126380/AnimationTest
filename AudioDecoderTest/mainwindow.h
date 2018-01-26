@@ -10,6 +10,8 @@
 #include <QMutex>
 #include "portaudio.h"
 #include "BlockingQueue.h"
+#include "RawAudioBuffer.h"
+#include <PacketBuffer.h>
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
@@ -19,28 +21,6 @@ extern "C" {
 namespace Ui {
 class MainWindow;
 }
-
-class DataBuffer {
-
-public:
-    DataBuffer(int64_t size):total_size(size), cur_pos(0), cancel_read(false) {}
-    void put_data(QByteArray &data);
-    QByteArray take_data(int64_t size, bool *b_success);
-
-private:
-    QByteArray music_data;
-    int64_t    cur_pos;
-    mutable QReadWriteLock lock;
-    QWaitCondition cond_empty;
-    QMutex     mutex;
-    int64_t    total_size;
-    bool       cancel_read;
-
-    friend class DemuxThread;
-    friend int64_t SeekFunc(void* ptr, int64_t pos, int whence);
-    friend int fill_iobuffer(void * opaque,uint8_t *buf, int bufsize);
-
-};
 
 class DemuxThread : public QThread
 {
@@ -62,7 +42,8 @@ private:
     AVFormatContext *format_context;
     int              audio_stream;
     QTimer           read_timer;
-    DataBuffer       music_data;
+    RawAudioBuffer   music_data;
+    PacketBuffer packets;
     bool             skip_read;
 
 

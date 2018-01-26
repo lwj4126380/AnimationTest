@@ -20,7 +20,8 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     Packet.cpp \
     PacketBuffer.cpp \
-    audiodemuxer.cpp
+    audiodemuxer.cpp \
+    rawaudiobuffer.cpp
 
 HEADERS  += mainwindow.h \
     Packet.h \

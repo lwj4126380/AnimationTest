@@ -20,14 +20,14 @@ typedef short SAMPLE;
 int fill_iobuffer(void * ptr,uint8_t *buf, int bufsize){
     DemuxThread *at = (DemuxThread *)ptr;
     bool b = true;
-    qDebug() << "tttttttttttttttttttttt";
-    QByteArray qa = at->music_data.take_data(bufsize, &b);
-    qDebug() << "gggggggggggggggggggggg";
+//    qDebug() << "tttttttttttttttttttttt  cur_pos: " << at->music_data.cur_pos;
+    QByteArray qa = at->music_data.take(bufsize, &b);
+//    qDebug() << "gggggggggggggggggggggg  buf size: " << bufsize;
     if (!b) {
         qDebug() << "cancel read";
         return -1;
     }
-    qDebug() << qa.size();
+//    qDebug() << qa.size();
 
     if (!qa.size())
         return AVERROR_EOF;
@@ -51,76 +51,30 @@ int64_t SeekFunc(void* ptr, int64_t pos, int whence)
     return pos;
 }
 
-
-void DataBuffer::put_data(QByteArray &data)
-{
-    QWriteLocker locker(&lock);
-    music_data.append(data);
-    if (music_data.size()-cur_pos >= ONE_PACKET_LEN || music_data.size() == total_size) {
-        cond_empty.wakeAll();
-    }
-}
-
-QByteArray DataBuffer::take_data(int64_t size, bool *b_success)
-{
-    QByteArray data;
-    QReadLocker locker(&lock);
-    if (cancel_read) {
-        if (b_success)
-            *b_success = false;
-        return data;
-    }
-    if (b_success)
-        *b_success = true;
-
-    if (music_data.size()-cur_pos >= ONE_PACKET_LEN) {
-        data = music_data.mid(cur_pos, size);
-        cur_pos += size;
-    } else {
-        if (music_data.size() == total_size) {
-            int64_t len = music_data.size()-cur_pos;
-            data = music_data.mid(cur_pos);
-            cur_pos += len;
-        } else {
-            cond_empty.wait(&lock);
-            if (cancel_read) {
-                if (b_success)
-                    *b_success = false;
-            } else {
-                int64_t act_len = music_data.size()-cur_pos >= ONE_PACKET_LEN ? ONE_PACKET_LEN : music_data.size()-cur_pos;
-                data = music_data.mid(cur_pos, act_len);
-                cur_pos += act_len;
-            }
-        }
-    }
-    return data;
-}
-
 DemuxThread::DemuxThread(QObject *parent) : QThread(parent),
     audio_stream(-1),
-    music_data(4602255),
+    music_data(4602255, ONE_PACKET_LEN),
     skip_read(false)
 {
 
-    QNetworkAccessManager *ma = new QNetworkAccessManager();
-    QNetworkReply *reply = ma->get(QNetworkRequest(QUrl("http://7xiclj.com1.z0.glb.clouddn.com/591a63aaeca6ea635b5d7daa.mp3")));
-    connect(reply, &QNetworkReply::readyRead, this, [&, reply](){
-        music_data.put_data(reply->readAll());
-    });
-
-//    QFile *file = new QFile("J:\\test.mp3", this);
-//    file->open(QFile::ReadOnly);
-//    read_timer.setInterval(200);
-//    connect(&read_timer, &QTimer::timeout, this, [=](){
-//        QByteArray qa = file->read(20480);
-//        if (qa.size())
-//            music_data.put_data(qa);
-//        if (!qa.size()) {
-//            qDebug() << "reach end, total size is: " << music_data.music_data.size();
-//            read_timer.stop();
-//        }
+//    QNetworkAccessManager *ma = new QNetworkAccessManager();
+//    QNetworkReply *reply = ma->get(QNetworkRequest(QUrl("http://7xiclj.com1.z0.glb.clouddn.com/591a63aaeca6ea635b5d7daa.mp3")));
+//    connect(reply, &QNetworkReply::readyRead, this, [&, reply](){
+//        music_data.put(reply->readAll());
 //    });
-//    read_timer.start();
+
+    QFile *file = new QFile("J:\\test.mp3", this);
+    file->open(QFile::ReadOnly);
+    read_timer.setInterval(500);
+    connect(&read_timer, &QTimer::timeout, this, [=](){
+        QByteArray qa = file->read(20480);
+        if (qa.size())
+            music_data.put(qa);
+        if (!qa.size()) {
+            read_timer.stop();
+        }
+    });
+    read_timer.start();
 }
 
 void DemuxThread::seek(qint64 pos)
@@ -141,8 +95,7 @@ void DemuxThread::seek(qint64 pos)
 
     newSeekRequest(new SeekTask(this, pos));
 
-    music_data.cancel_read = true;
-    music_data.cond_empty.wakeAll();
+    music_data.clear();
 }
 
 void DemuxThread::seekInternal(qint64 pos)
@@ -151,7 +104,7 @@ void DemuxThread::seekInternal(qint64 pos)
     QMutexLocker locker(&mutex);
     decode_data.clear();
 
-    music_data.cancel_read = false;
+    music_data.clear();
     int ret = av_seek_frame(format_context, -1, pos*AV_TIME_BASE , AVSEEK_FLAG_ANY);
 
     qDebug() << "seek result " << ret;
@@ -280,9 +233,8 @@ void DemuxThread::run()
     //    seek(20);
 
     while (true) {
-//                        QThread::msleep(200);
+                        QThread::msleep(20);
         processNextSeekTask();
-        qDebug() << music_data.cancel_read;
 
         int ret = av_read_frame(format_context, packet);
         if (ret < 0) {
@@ -297,15 +249,15 @@ void DemuxThread::run()
                 qDebug() << "vvvvvvvvvvvvvvvvvvvv   " << packet->size << ret;
             if ( ret < 0 ) {
                 printf("Error in decoding audio frame.\n");
-                return;
+                continue;
             }
             if ( got_picture > 0 ){
                 swr_convert(au_convert_ctx,&out_buffer, MAX_AUDIO_FRAME_SIZE,(const uint8_t **)pFrame->data , pFrame->nb_samples);
                 QMutexLocker locker(&mutex);
                 decode_data.append((const char *)out_buffer, out_buffer_size);
-                qDebug() << QString("index:%1    pts:%2     packet size:%3").arg(QString::number(index)).arg(QString::number(packet->pts)).arg(QString::number(packet->size));
+//                qDebug() << QString("index:%1    pts:%2     packet size:%3").arg(QString::number(index)).arg(QString::number(packet->pts)).arg(QString::number(packet->size));
 
-                                fwrite(out_buffer, 1, out_buffer_size, pFile);
+//                                fwrite(out_buffer, 1, out_buffer_size, pFile);
 
                 index++;
             }

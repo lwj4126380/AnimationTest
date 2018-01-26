@@ -23,10 +23,11 @@ SOURCES += main.cpp\
     audiodemuxer.cpp
 
 HEADERS  += mainwindow.h \
-    BlockingQueue.h \
     Packet.h \
     PacketBuffer.h \
     ring.h \
-    audiodemuxer.h
+    audiodemuxer.h \
+    RawAudioBuffer.h \
+    BlockingQueue.h
 
 FORMS    += mainwindow.ui

@@ -21,12 +21,12 @@ int main(int argc, char *argv[])
         a.setStyleSheet( styleSheet );
     }
 
-//    MainWindow w(&a, true);
-//    w.show();
+    MainWindow w(&a, true);
+    w.show();
 
-    Mpg123Decoder *dc = new Mpg123Decoder();
-    dc->Open(new HttpProvider("http://7xiclj.com1.z0.glb.clouddn.com/591a63aaeca6ea635b5d7daa.mp3"));
-    dc->start();
+//    Mpg123Decoder *dc = new Mpg123Decoder();
+//    dc->Open(new HttpProvider("http://7xiclj.com1.z0.glb.clouddn.com/591a63aaeca6ea635b5d7daa.mp3"));
+//    dc->start();
 //    while (1) {
 ////        dc->GetBuffer();
 //        QThread::msleep(500);

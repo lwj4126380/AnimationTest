@@ -342,4 +342,4 @@ bool BlockingQueue<T, Container>::checkEnough() const
 {
     return queue.size() >= thres && !checkEmpty();
 }
-#endif
+#endif // QTAV_BLOCKINGQUEUE_H
